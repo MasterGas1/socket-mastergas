@@ -7,8 +7,19 @@
 
 ## Instalation Steps
 
-Install librarys use the command:
-`npm install` or `npm i`
+1. Install librarys use the command:
+```
+npm install
+```
+ or 
+ ```
+ npm i
+ ```
+
+2. Lift Database with docker
+ ```
+ docker-compose up -d
+ ```
 
 ## Available Scripts
 

@@ -7,6 +7,7 @@ class Server {
     private port: string;
 
     constructor() {
+        //Initialize express
         this.app = express();
 
         //Set Port of the server
@@ -14,6 +15,7 @@ class Server {
     }
 
     listen() {
+        //Set server PORT 
         this.app.listen(this.port, () => {
             console.log(`Server is running in port: ${this.port}`)
         })
