@@ -1,11 +1,23 @@
 import { Request, Response } from 'express';
+
 import TypeService from './type-service.model';
 
+import validateRouteBody from '../helper/validateRoute';
+
 export const createTypeService = async (req: Request, res:Response) => {
+
+    validateRouteBody(req,res); //Validate body of request
     
     const {body} = req
 
     try{
+
+        const isRepeated = await TypeService.find({name: body.name});
+
+        if(isRepeated){
+            return res.json('Repeated')
+        }
+
         const typeService = new TypeService(body);
 
         await typeService.save();
