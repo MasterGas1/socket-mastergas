@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
-import Server from './helper/server';
+import db from './db/connection';
+import Server from './src/helper/server';
 
 dotenv.config();
 
 const server = new Server;
 
 server.listen();
+
+db()
