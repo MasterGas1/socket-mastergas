@@ -21,6 +21,20 @@ npm install
  docker-compose up -d
  ```
 
+3. Build js files
+```
+npm start:build
+```
+or
+```
+tsc
+```
+
+4. Start server with
+```
+npm start
+```
+
 ## Available Scripts
 
 Inside The project you can run:

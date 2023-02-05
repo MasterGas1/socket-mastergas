@@ -1,17 +1,14 @@
 import {Router} from 'express'
-import {check} from 'express-validator'
 
 import { createTypeService, getAllTypeServices, getByIdTypeServices, updateTypeService, deleteTypeService } from './type-service.controller';
+
+import { validationCreate, validationUpdate } from './type-service.validator';
 
 
 const router = Router();
 
 router.post('/',
-    [
-        check('name','The name is required in type-service').not().isEmpty(),
-        check('name','The name needs to be string in type-service').isString()
-            
-    ],
+    validationCreate,
     createTypeService
 );
 
@@ -19,7 +16,10 @@ router.get('/',getAllTypeServices)
 
 router.get('/:id', getByIdTypeServices)
 
-router.put('/:id',updateTypeService)
+router.put('/:id',
+    validationUpdate,
+    updateTypeService
+)
 
 router.delete('/:id',deleteTypeService)
 
