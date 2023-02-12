@@ -2,6 +2,7 @@ import express, { Application, json } from "express";
 import cors from 'cors'
 
 import typeServiceRoutes from '../type-service/type-service.route';
+import seederRoutes from '../seeder/seeder.route';
 
 class Server {
 
@@ -9,7 +10,8 @@ class Server {
     private port: string;
     
     private apiPaths = {
-        typeService: '/type-service'
+        typeService: '/type-service',
+        seeder: '/seeder'
     }
 
     private PATH = '/api/v1'
@@ -31,9 +33,10 @@ class Server {
     //Set routes 
     routes(){
         this.app.use(`${this.PATH}${this.apiPaths.typeService}`, typeServiceRoutes) //Type Service
+        this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
     }
 
-    listen() {
+    listen() { 
         //Set server PORT 
         this.app.listen(this.port, () => {
             console.log(`Server is running in port: ${this.port}`)
