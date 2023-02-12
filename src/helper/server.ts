@@ -1,7 +1,9 @@
 import express, { Application, json } from "express";
 import cors from 'cors'
 
+//Routes
 import typeServiceRoutes from '../type-service/type-service.route';
+import serviceRoutes from '../service/service.route'
 import seederRoutes from '../seeder/seeder.route';
 
 class Server {
@@ -11,6 +13,7 @@ class Server {
     
     private apiPaths = {
         typeService: '/type-service',
+        service: '/service',
         seeder: '/seeder'
     }
 
@@ -33,6 +36,7 @@ class Server {
     //Set routes 
     routes(){
         this.app.use(`${this.PATH}${this.apiPaths.typeService}`, typeServiceRoutes) //Type Service
+        this.app.use(`${this.PATH}${this.apiPaths.service}`, serviceRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
     }
 
