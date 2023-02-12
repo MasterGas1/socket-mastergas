@@ -5,15 +5,13 @@ const ServiceSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true,
-        unique: true
+        trim: true
     },
 
     description: {
         type: String,
         required: true,
-        trim: true,
-        unique: true
+        trim: true
     },
 
     image: {
@@ -24,14 +22,24 @@ const ServiceSchema = new mongoose.Schema({
 
     type: {
         type: String,
-        enum: ['root', 'soon', 'end'],
+        enum: ['root service', 'subservice', 'price'],
         trim: true,
         required: true
     },
+
+    father_service: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service'
+    },
+
+    sub_services:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service'
+    }],
 
     price: {
         type: Number
     }
 })
 
-export default mongoose.model('service',ServiceSchema);
+export default mongoose.model('Service',ServiceSchema);

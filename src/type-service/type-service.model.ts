@@ -9,4 +9,4 @@ const TypeServiceSchema = new mongoose.Schema({
     }
 })
 
-export default mongoose.model('type-service', TypeServiceSchema);
+export default mongoose.model('Type-service', TypeServiceSchema);
