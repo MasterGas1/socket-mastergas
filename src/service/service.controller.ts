@@ -44,7 +44,16 @@ export const createService = async (req: Request,res: Response) => {
 }
 
 
+export const getRootServices = async(req: Request, res: Response) => {
+    try{
+        const services = await Service.find({type: 'root service'}).populate('sub_services', '-father_service')
 
+        okRequest(res,services)
+    }catch(error){
+        console.log(error)
+        return internalServerError(res) // Return server error
+    }
+}
 
 const rootFather = async(body: serviceProps,res: Response) => {
     const fatherExist = await Service.findById(body.father_service);
