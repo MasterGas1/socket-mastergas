@@ -4,6 +4,7 @@ import Service from './service.model';
 
 import { badRequest, internalServerError, okRequest } from '../helper/handleResponse';
 import { serviceProps } from "../interfaces/service.interface";
+import validateRouteBody from '../helper/validateRoute';
 
 declare module "express"{
     interface Request{
@@ -12,10 +13,17 @@ declare module "express"{
 }
 
 export const createService = async (req: Request,res: Response) => {
+
+    const response = validateRouteBody(req,res)
         
+    if(response)
+        return response
+
     try{
         
         const {body} = req;
+
+        //change name and description to lowercase
 
         if((body.type === 'subservice' || body.type === 'price' ) && !body.father_service) // Validate if this types have fatherId
          {

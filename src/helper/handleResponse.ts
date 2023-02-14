@@ -18,7 +18,7 @@ export const okRequest = ( res: Response, data?: String | Object[] | Object | nu
     return res.json(response);
 }
 
-export const badRequest = (res: Response ,data: string): Response => {
+export const badRequest = (res: Response ,data: string | object[]): Response => {
     response = {
         status: 400,
         data 
