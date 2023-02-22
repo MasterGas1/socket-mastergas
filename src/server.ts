@@ -1,8 +1,8 @@
 import express, { Application, json } from "express";
 import cors from 'cors'
 
-import typeServiceRoutes from '../type-service/type-service.route';
-import seederRoutes from '../seeder/seeder.route';
+import typeServiceRoutes from './type-service/type-service.route';
+import seederRoutes from './seeder/seeder.route';
 
 class Server {
 
