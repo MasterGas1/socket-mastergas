@@ -11,7 +11,6 @@ export const createAddress = async (req: Request, res: Response) => {
     const {body} = req;
     
     try{
-        console.log(res);
         if(validateRouteBody(req,res))
              return;
         
