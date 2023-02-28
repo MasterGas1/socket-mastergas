@@ -27,3 +27,15 @@ export const createCustomer = async (req: Request, res: Response) => {
         return internalServerError(res);
     }
 }
+
+export const getAllCustomers = async (req: Request, res: Response) => {
+    try{
+        const customer = await Customer.find();
+
+        okRequest(res,customer);
+    }catch(error){
+        console.log(error);
+
+        return internalServerError(res);
+    }
+}
