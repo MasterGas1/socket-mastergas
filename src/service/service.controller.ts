@@ -32,8 +32,10 @@ export const createService = async (req: Request,res: Response) => {
          }
         else if(body.type !== 'root service'){ //Call rootFather function if the type isnt root service
             return rootFather(body,res)
+        } else if(body.father_service){
+            return badRequest(res,'The root service cannot have a father_service')
         }
-
+        
         const isRootServiceExist = await Service.findOne({name: body.name, type: body.type})
 
         if(isRootServiceExist){ //Validate if the name with type root service exist
@@ -89,7 +91,7 @@ export const getOneService = async(req: Request, res: Response) => {
 export const updateService = async(req:Request,res:Response) => {
     try{
         const {id} = req.params;
-        const {name, father_service} = req.body
+        const {name, father_service, available} = req.body
         
         if(!parseMongoId(id)) //Checks if the id is a uuid
             return badRequest(res,'The id is not uuid');
@@ -113,7 +115,8 @@ export const updateService = async(req:Request,res:Response) => {
         }
 
         const newService = { // At the moment only can change the name
-            name
+            name,
+            available
         }
 
         service = await Service.findByIdAndUpdate(id,newService,{new: true}); //Update the service
@@ -124,6 +127,7 @@ export const updateService = async(req:Request,res:Response) => {
         return internalServerError(res); //Return server error
     }
 }
+
 
 const rootFather = async(body: serviceProps,res: Response) => {
     const fatherExist = await Service.findById(body.father_service);

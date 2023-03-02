@@ -5,5 +5,6 @@ export interface serviceProps{
     type: 'root service' | 'subservice' | 'price',
     sub_service?:string,
     father_service?: string,
-    price?:number
+    price?:number,
+    available?:boolean
 }

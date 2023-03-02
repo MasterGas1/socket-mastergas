@@ -39,6 +39,10 @@ const ServiceSchema = new mongoose.Schema({
 
     price: {
         type: Number
+    },
+    available: {
+        type: Boolean,
+        default: true
     }
 })
 
