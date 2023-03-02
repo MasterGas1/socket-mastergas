@@ -86,6 +86,45 @@ export const getOneService = async(req: Request, res: Response) => {
     }
 }
 
+export const updateService = async(req:Request,res:Response) => {
+    try{
+        const {id} = req.params;
+        const {name, father_service} = req.body
+        
+        if(!parseMongoId(id)) //Checks if the id is a uuid
+            return badRequest(res,'The id is not uuid');
+        
+        let service:any = await Service.findById(id) // Find if exist the service
+
+        if(!service){
+            return notFound(res,'The service id not found');
+        }
+
+        if(father_service && service.type === 'root service'){ //Checks if the father root has a father_service
+            return badRequest(res,'The root service cannot have a father_service')
+        }else if(!father_service && service.type !== 'root service'){ //Checks if any others types has a father_service
+            return badRequest(res,'Any differente root service needs a father_service');
+        }
+
+        service = await Service.findOne({father_service, name}); // Checks if the service name is not repeated at the same father
+
+        if(service){
+           return badRequest(res,'The service name is allready exist');
+        }
+
+        const newService = { // At the moment only can change the name
+            name
+        }
+
+        service = await Service.findByIdAndUpdate(id,newService,{new: true}); //Update the service
+
+        okRequest(res,service) //Return typeService object
+    }catch(error){
+        console.log(error);
+        return internalServerError(res); //Return server error
+    }
+}
+
 const rootFather = async(body: serviceProps,res: Response) => {
     const fatherExist = await Service.findById(body.father_service);
     
