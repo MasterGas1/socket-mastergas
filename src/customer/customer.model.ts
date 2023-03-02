@@ -11,10 +11,10 @@ const CustomerSchema = new mongoose.Schema({
         require: true,
         trim: true
     },
-    addresses: {
+    addresses: [{
         type: Schema.Types.ObjectId,
         ref: 'address'
-    }
+    }]
 })
 
 export default mongoose.model('customer', CustomerSchema);
