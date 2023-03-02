@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import { badRequest, internalServerError, notFound, okRequest } from "../helper/handleResponse";
-import parseMongoId from "../helper/parseMongoId";
-import validateRouteBody from "../helper/validateRoute";
+
 import Customer from './customer.model';
+
+import { badRequest, internalServerError, notFound, okRequest } from "../helper/handleResponse";
+import validateRouteBody from "../helper/validateRoute";
+import parseMongoId from "../helper/parseMongoId";
 
 
 export const createCustomer = async (req: Request, res: Response) => {
@@ -87,6 +89,30 @@ export const updateCustomer = async (req: Request, res: Response) => {
         customer = await Customer.findByIdAndUpdate(id, body,{new: true})
 
         okRequest(res, customer)
+    }catch(error){
+        console.log(error);
+
+        return internalServerError(res);
+    }
+}
+
+export const deleteCustomer = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try{
+        if(!parseMongoId(id))
+            return badRequest(res, 'The id is not uuid');
+
+            let customer = await Customer.findById(id);
+
+            if(!customer){
+                return notFound(res, 'The customer id not found');
+            }
+
+            await Customer.findByIdAndDelete(id);
+
+            okRequest(res, 'Customer was deleted');
+            
     }catch(error){
         console.log(error);
 
