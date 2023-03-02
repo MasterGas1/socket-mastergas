@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 
 import Service from './service.model';
 
-import { badRequest, internalServerError, okRequest } from '../helper/handleResponse';
+import { badRequest, internalServerError, notFound, okRequest } from '../helper/handleResponse';
 import { serviceProps } from "../interfaces/service.interface";
 import validateRouteBody from '../helper/validateRoute';
+import parseMongoId from "../helper/parseMongoId";
 
 declare module "express"{
     interface Request{
@@ -60,6 +61,28 @@ export const getRootServices = async(req: Request, res: Response) => {
     }catch(error){
         console.log(error)
         return internalServerError(res) // Return server error
+    }
+}
+
+export const getOneService = async(req: Request, res: Response) => {
+    try{
+
+        const {id} = req.params;
+        
+        if(!parseMongoId(id)) //Checks if the id is a uuid
+            return badRequest(res,'The id is not uuid');
+
+
+        const service = await Service.findById(id).populate('sub_services', '-father_service');
+
+        if(!service)
+            return notFound(res,'The not found')
+
+        okRequest(res,service)
+
+    }catch(error){
+        console.log(error);
+        return internalServerError(res); //Return server error
     }
 }
 

@@ -8,7 +8,8 @@ import parseMongoId from '../helper/parseMongoId';
 
 export const createTypeService = async (req: Request, res:Response) => {
 
-    validateRouteBody(req,res); //Validate body of request
+    if(validateRouteBody(req,res)) //Validate body of request
+        return;
     
     const {body} = req
 
@@ -70,8 +71,9 @@ export const updateTypeService = async (req: Request, res: Response) => {
 
     const {body} = req
  
-    try{
-        validateRouteBody(req,res); //Validate body of request
+    try{ 
+        if(validateRouteBody(req,res)) //Validate body of request
+            return;
 
         if(!parseMongoId(id)) //Checks if the id is a uuid
             return badRequest(res,'The id is not uuid');
