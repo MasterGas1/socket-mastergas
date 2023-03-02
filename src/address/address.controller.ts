@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import { badRequest, internalServerError, notFound, okRequest } from "../helper/handleResponse";
-import parseMongoId from "../helper/parseMongoId";
-import validateRouteBody from "../helper/validateRoute";
+
 import Address from './address.model'
+
+import { badRequest, internalServerError, notFound, okRequest } from "../helper/handleResponse";
+import validateRouteBody from "../helper/validateRoute";
+import parseMongoId from "../helper/parseMongoId";
 
 
 export const createAddress = async (req: Request, res: Response) => {
@@ -11,7 +13,6 @@ export const createAddress = async (req: Request, res: Response) => {
     const {body} = req;
     
     try{
-        console.log(res);
         if(validateRouteBody(req,res))
              return;
         

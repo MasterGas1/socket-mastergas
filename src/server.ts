@@ -3,6 +3,7 @@ import cors from 'cors'
 
 import typeServiceRoutes from './type-service/type-service.route';
 import addressRoutes from './address/address.route'
+import customerRoutes from './customer/customer.route'
 import seederRoutes from './seeder/seeder.route';
 
 class Server {
@@ -13,7 +14,8 @@ class Server {
     private apiPaths = {
         typeService: '/type-service',
         seeder: '/seeder',
-        address: '/address'
+        address: '/address',
+        customer: '/customer'
     }
 
     private PATH = '/api/v1'
@@ -36,6 +38,7 @@ class Server {
     routes(){
         this.app.use(`${this.PATH}${this.apiPaths.typeService}`, typeServiceRoutes) //Type Service
         this.app.use(`${this.PATH}${this.apiPaths.address}`, addressRoutes)
+        this.app.use(`${this.PATH}${this.apiPaths.customer}`, customerRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
     }
 
