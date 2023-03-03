@@ -9,7 +9,7 @@ import parseMongoId from "../helper/parseMongoId";
 
 declare module "express"{
     interface Request{
-        body: serviceProps
+        body: any
     }
 }
 
