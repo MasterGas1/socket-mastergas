@@ -4,6 +4,7 @@ import User from './user.model';
 
 import validateRouteBody from '../helper/validateRoute';
 import { okRequest, badRequest, internalServerError, notFound } from '../helper/handleResponse';
+import parseMongoId from '../helper/parseMongoId';
 
 export const createUser = async(req: Request, res: Response) => {
 
@@ -45,5 +46,22 @@ export const getUsers = async (req: Request, res: Response) => {
         console.log(error)
 
         return internalServerError(res) // Return server error
+    }
+}
+
+export const getByIdUser = async(req: Request, res: Response) => {
+    const {id} = req.params
+
+    try{
+        if(!parseMongoId(id))
+        return badRequest(res, 'The id is not uuid');
+
+        const user = await User.findById(id)
+
+        okRequest(res,user)
+    }catch(error){
+        console.log(error)
+
+        return internalServerError(res)
     }
 }

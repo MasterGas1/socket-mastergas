@@ -1,6 +1,6 @@
 import {Router} from 'express'
 
-import { createUser, getUsers } from './user.controller'
+import { createUser, getByIdUser, getUsers } from './user.controller'
 import { validationCreate } from './user.validator';
 
 
@@ -11,5 +11,7 @@ import { validationCreate } from './user.validator';
     createUser);
 
 router.get('/', getUsers);
+
+router.get('/:id', getByIdUser);
 
  export default router;
