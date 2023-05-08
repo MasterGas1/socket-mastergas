@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import Customer from './customer.model';
+import User from '../user/user.model'
 
 import { badRequest, internalServerError, notFound, okRequest } from "../helper/handleResponse";
 import validateRouteBody from "../helper/validateRoute";
@@ -9,23 +10,33 @@ import parseMongoId from "../helper/parseMongoId";
 
 export const createCustomer = async (req: Request, res: Response) => {
     const { body } = req;
+    
+    if(validateRouteBody(req,res))
+        return;
+    
+    const session = await User.startSession();
 
     try {
-        if(validateRouteBody(req,res))
-            return;
-        
-        const isRepeat = await Customer.findOne({rfc: body.rfc});
 
-        if (isRepeat) {
-            return badRequest(res, 'The Customer is already registered');
+        session.startTransaction()
+
+        const customer:any = await Customer.create([body.customer],{session})
+
+        delete body.customer
+        const userBody = {
+            ...body,
+            customer_id: customer[0]._id
         }
 
-        const customer = new Customer(body);
+        const user = await User.create([userBody],{session})
 
-        await customer.save();
+        await session.commitTransaction()
+        session.endSession()
 
-        okRequest(res, customer);
+        okRequest(res, user[0]);
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession()
         console.log(error);
         return internalServerError(res);
     }

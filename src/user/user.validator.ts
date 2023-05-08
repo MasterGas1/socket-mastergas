@@ -1,4 +1,5 @@
 import {check} from 'express-validator'
+import { validationCustomerCreate } from '../customer/customer.validator'
 
 export const validationCreate = [
     check('name','The name requires 4 characters minimum').isLength({min:4}),

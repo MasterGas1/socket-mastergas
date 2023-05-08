@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { customerProps } from '../interfaces/customer.interface';
 
 const CustomerSchema = new mongoose.Schema({
     rfc:{
@@ -17,4 +18,4 @@ const CustomerSchema = new mongoose.Schema({
     }]
 })
 
-export default mongoose.model('customer', CustomerSchema);
+export default mongoose.model<customerProps>('customer', CustomerSchema);
