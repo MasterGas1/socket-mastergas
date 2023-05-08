@@ -10,6 +10,9 @@ import parseMongoId from "../helper/parseMongoId";
 
 export const createCustomer = async (req: Request, res: Response) => {
     const { body } = req;
+    const {email} = body
+    const {rfc} = body.customer
+
     
     if(validateRouteBody(req,res))
         return;
@@ -18,24 +21,36 @@ export const createCustomer = async (req: Request, res: Response) => {
 
     try {
 
-        session.startTransaction()
+        const isRepeatedCustomer = await Customer.findOne({rfc})
+        const isRepeatedEmail = await User.findOne({email})
+
+        if(isRepeatedEmail){
+            return badRequest(res, `User with email: ${email} is repeated`)
+        }
+        
+        if(isRepeatedCustomer){
+            return badRequest(res,`Customer with rfc: ${rfc} is repeated`)
+        }
+
+
+        session.startTransaction() // Start transaction, help us if there a problem when we are creating both collections make a roleback
 
         const customer:any = await Customer.create([body.customer],{session})
 
-        delete body.customer
-        const userBody = {
+        delete body.customer //Delete property customer of the body
+        const userBody = { //Create new body with new field customer_id
             ...body,
-            customer_id: customer[0]._id
+            customer_id: customer[0]._id  // Customer with session always returns an array
         }
 
-        const user = await User.create([userBody],{session})
+        const user = await User.create([userBody],{session}) //Create user with customer id
 
-        await session.commitTransaction()
+        await session.commitTransaction() // Do the transaction create both collections
         session.endSession()
 
         okRequest(res, user[0]);
     } catch (error) {
-        await session.abortTransaction();
+        await session.abortTransaction(); //If there are a error delete all actions
         session.endSession()
         console.log(error);
         return internalServerError(res);
