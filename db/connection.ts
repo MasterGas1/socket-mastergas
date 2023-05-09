@@ -9,7 +9,7 @@ const db = async() => {
 
         //Connection databse
         await mongoose.connect(
-            'mongodb://localhost:27017/masterGas23'
+            'mongodb+srv://admin:root@cluster0.pzvdy2j.mongodb.net/mastergas'
         )
 
         console.log('Database online')

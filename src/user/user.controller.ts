@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
+import * as bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 import User from './user.model';
 
 import validateRouteBody from '../helper/validateRoute';
-import { okRequest, badRequest, internalServerError, notFound } from '../helper/handleResponse';
+import { okRequest, badRequest, internalServerError, notFound, unauthorized } from '../helper/handleResponse';
 import parseMongoId from '../helper/parseMongoId';
 
 export const createUser = async(req: Request, res: Response) => {
@@ -32,6 +34,30 @@ export const createUser = async(req: Request, res: Response) => {
     }catch(error){
         console.log(error);
         return internalServerError(res) //Return server error
+    }
+}
+
+export const authUser = async(req: Request, res: Response) => {
+    if(validateRouteBody(req,res))
+        return;
+
+    try{
+        const {email, password} = req.body
+
+        const user:any = await User.findOne({email}).select('_id email password')
+
+        if(!user)
+            return unauthorized(res,'Credentials are not valid (email)')
+            
+        if(!bcrypt.compareSync(password, user.password))
+            return unauthorized(res,'Credentials are not valid (paswword)')
+
+        const token = jwt.sign({id: user._id},"SECRETO")
+
+        okRequest(res,{user,token: token})
+    }catch(error){
+        console.log(error)
+        return internalServerError(res)
     }
 }
 

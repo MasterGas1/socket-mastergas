@@ -36,6 +36,15 @@ export const notFound = (res: Response,data: string): Response =>{
     return res.status(404).send(response)
 }
 
+export const unauthorized = (res: Response, data: string): Response => {
+    response = {
+        status: 401,
+        data
+    }
+    
+    return res.status(401).send(response)
+}
+
 export const internalServerError = (res: Response): Response => {
     response = {
         status: 500,
