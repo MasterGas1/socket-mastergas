@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken';
 
 import Customer from './customer.model';
 import User from '../user/user.model'
@@ -59,7 +60,9 @@ export const createCustomer = async (req: Request, res: Response) => {
             customer: customer
         }
 
-        okRequest(res, userReq);
+        const token = jwt.sign({id: userReq._id},"SECRETO")
+
+        okRequest(res, {userReq, token});
     } catch (error) {
         await session.abortTransaction(); //If there are a error delete all actions
         session.endSession()
