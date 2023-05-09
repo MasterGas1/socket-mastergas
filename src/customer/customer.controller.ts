@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as bcrypt from 'bcrypt'
 
 import Customer from './customer.model';
 import User from '../user/user.model'
@@ -10,7 +11,7 @@ import parseMongoId from "../helper/parseMongoId";
 
 export const createCustomer = async (req: Request, res: Response) => {
     const { body } = req;
-    const {email} = body
+    const {email,password} = body
     const {rfc} = body.customer
 
     
@@ -27,7 +28,7 @@ export const createCustomer = async (req: Request, res: Response) => {
         if(isRepeatedEmail){
             return badRequest(res, `User with email: ${email} is repeated`)
         }
-        
+
         if(isRepeatedCustomer){
             return badRequest(res,`Customer with rfc: ${rfc} is repeated`)
         }
@@ -40,6 +41,7 @@ export const createCustomer = async (req: Request, res: Response) => {
         delete body.customer //Delete property customer of the body
         const userBody = { //Create new body with new field customer_id
             ...body,
+            password: bcrypt.hashSync(password,10),
             customer_id: customer[0]._id  // Customer with session always returns an array
         }
 
@@ -48,7 +50,16 @@ export const createCustomer = async (req: Request, res: Response) => {
         await session.commitTransaction() // Do the transaction create both collections
         session.endSession()
 
-        okRequest(res, user[0]);
+        const userReq = {
+            name: user[0].name,
+            lastName: user[0].lastName,
+            email: user[0].email,
+            customer_id: user[0].customer_id,
+            _id: user[0]._id,
+            customer: customer
+        }
+
+        okRequest(res, userReq);
     } catch (error) {
         await session.abortTransaction(); //If there are a error delete all actions
         session.endSession()
@@ -57,17 +68,17 @@ export const createCustomer = async (req: Request, res: Response) => {
     }
 }
 
-export const getAllCustomers = async (req: Request, res: Response) => {
-    try{
-        const customer = await Customer.find();
+// export const getAllCustomers = async (req: Request, res: Response) => {
+//     try{
+//         const customer = await Customer.find();
 
-        okRequest(res,customer);
-    }catch(error){
-        console.log(error);
+//         okRequest(res,customer);
+//     }catch(error){
+//         console.log(error);
 
-        return internalServerError(res);
-    }
-}
+//         return internalServerError(res);
+//     }
+// }
 
 export const getByIdCustomers = async (req: Request, res: Response) => {
     
