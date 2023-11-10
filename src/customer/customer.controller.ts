@@ -59,8 +59,10 @@ export const createCustomer = async (req: Request, res: Response) => {
             _id: user[0]._id,
             customer: customer
         }
+        
+        const secretKey = process.env.SECRET_KEY || "S3CR3TK3Y$"
 
-        const token = jwt.sign({id: userReq._id},"SECRETO")
+        const token = jwt.sign({id: userReq._id}, secretKey)
 
         okRequest(res, {userReq, token});
     } catch (error) {
