@@ -4,22 +4,24 @@ import jwt from 'jsonwebtoken';
 
 import Customer from './customer.model';
 import User from '../user/user.model'
+import Roles from "../roles/roles.model";
 
-import { badRequest, internalServerError, notFound, okRequest } from "../helper/handleResponse";
+import { badRequest, internalServerError, notFound, okRequest, preconditionRequiredRequest } from "../helper/handleResponse";
 import validateRouteBody from "../helper/validateRoute";
 import parseMongoId from "../helper/parseMongoId";
+import mongoose from "mongoose";
 
 
 export const createCustomer = async (req: Request, res: Response) => {
-    const { body } = req;
-    const {email,password} = body
-    const {rfc} = body.customer
-
     
     if(validateRouteBody(req,res))
         return;
     
-    const session = await User.startSession();
+    const { body } = req;
+    const {email,password} = body
+    const {rfc} = body.customer
+    
+    const session = await mongoose.startSession();
 
     try {
 
@@ -40,8 +42,16 @@ export const createCustomer = async (req: Request, res: Response) => {
         const customer:any = await Customer.create([body.customer],{session})
 
         delete body.customer //Delete property customer of the body
+
+        const role = await Roles.findOne({name: "customer"}) //Get the role
+
+        if (!role) { //Validate if the role doesn't exist
+            return preconditionRequiredRequest(res,{msg: "It's necessary to ejecute seeder role before to call this end-point"})
+        }
+
         const userBody = { //Create new body with new field customer_id
             ...body,
+            role_id: role._id, 
             password: bcrypt.hashSync(password,10),
             customer_id: customer[0]._id  // Customer with session always returns an array
         }
@@ -50,21 +60,12 @@ export const createCustomer = async (req: Request, res: Response) => {
 
         await session.commitTransaction() // Do the transaction create both collections
         session.endSession()
-
-        const userReq = {
-            name: user[0].name,
-            lastName: user[0].lastName,
-            email: user[0].email,
-            customer_id: user[0].customer_id,
-            _id: user[0]._id,
-            customer: customer
-        }
         
         const secretKey = process.env.SECRET_KEY || "S3CR3TK3Y$"
 
-        const token = jwt.sign({id: userReq._id}, secretKey)
+        const token = jwt.sign({id: user[0]._id}, secretKey)
 
-        okRequest(res, {userReq, token});
+        okRequest(res, {token});
     } catch (error) {
         await session.abortTransaction(); //If there are a error delete all actions
         session.endSession()

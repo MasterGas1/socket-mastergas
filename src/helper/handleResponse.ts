@@ -45,6 +45,15 @@ export const unauthorized = (res: Response, data: string): Response => {
     return res.status(401).send(response)
 }
 
+export const preconditionRequiredRequest = (res:Response,data:Object) => {
+    response = {
+        status: 428,
+        data
+    }
+    
+    return res.status(428).json(response)
+}
+
 export const internalServerError = (res: Response): Response => {
     response = {
         status: 500,

@@ -15,7 +15,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         require: true,
         trim: true,
-        unique: true
     },
     password: {
         type: String,
@@ -24,12 +23,20 @@ const UserSchema = new mongoose.Schema({
     },
     picture: {
         type: String,
-        require: true,
+        default: "https://res.cloudinary.com/dnesdnfxy/image/upload/v1700172676/mastergas23/users/nrtsecwphzvysmcddswx.png",
         trim: true
+    },
+    createdAt:{
+        type: Date,
+        default: Date.now()
+    },
+    role_id: {
+        type: Schema.Types.ObjectId,
+        require: true,
     },
     customer_id: {
         type: Schema.Types.ObjectId,
-        ref: "custome"
+        ref: "customer"
     }
 })
 
