@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Request, Response } from "express";
 import * as bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
@@ -9,7 +10,8 @@ import Roles from "../roles/roles.model";
 import { badRequest, internalServerError, notFound, okRequest, preconditionRequiredRequest } from "../helper/handleResponse";
 import validateRouteBody from "../helper/validateRoute";
 import parseMongoId from "../helper/parseMongoId";
-import mongoose from "mongoose";
+
+import { RequestMiddle } from "../user/user.middleware";
 
 
 export const createCustomer = async (req: Request, res: Response) => {
@@ -53,6 +55,7 @@ export const createCustomer = async (req: Request, res: Response) => {
             ...body,
             role_id: role._id, 
             password: bcrypt.hashSync(password,10),
+            status: "approved",
             customer_id: customer[0]._id  // Customer with session always returns an array
         }
 
@@ -74,17 +77,20 @@ export const createCustomer = async (req: Request, res: Response) => {
     }
 }
 
-// export const getAllCustomers = async (req: Request, res: Response) => {
-//     try{
-//         const customer = await Customer.find();
+export const getCustomerByToken = async (req: RequestMiddle, res: Response) => {
+    try{
 
-//         okRequest(res,customer);
-//     }catch(error){
-//         console.log(error);
+        const customer = await User.findById(req.userId)
+            .populate([{path: "role_id", select: "-_id"},{path: "customer_id", select: "-_id"}])
+                .select("-password -status");
 
-//         return internalServerError(res);
-//     }
-// }
+        okRequest(res,customer);
+    }catch(error){
+        console.log(error);
+
+        return internalServerError(res);
+    }
+}
 
 export const getByIdCustomers = async (req: Request, res: Response) => {
     

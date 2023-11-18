@@ -30,9 +30,14 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
+    status: {
+        type: String,
+        enum: ["pedding","approved","denied"]
+    },
     role_id: {
         type: Schema.Types.ObjectId,
         require: true,
+        ref: "Role"
     },
     customer_id: {
         type: Schema.Types.ObjectId,

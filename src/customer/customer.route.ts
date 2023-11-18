@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { createCustomer, deleteCustomer, getByIdCustomers, updateCustomer } from "./customer.controller";
+import { createCustomer, deleteCustomer, getCustomerByToken, updateCustomer } from "./customer.controller";
 import {validationCustomerCreate, validationCustomerUpdate} from './customer.validator'
+import authMiddleware from "../user/user.middleware";
 
 
 const router = Router();
@@ -9,7 +10,10 @@ router.post('/', validationCustomerCreate, createCustomer);
 
 //router.get('/', getAllCustomers);
 
-router.get('/:id', getByIdCustomers);
+router.get('/', 
+    authMiddleware,
+    getCustomerByToken    
+);
 
 router.put('/:id', validationCustomerUpdate, updateCustomer);
 

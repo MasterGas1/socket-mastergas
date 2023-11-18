@@ -36,7 +36,7 @@ export const notFound = (res: Response,data: string): Response =>{
     return res.status(404).send(response)
 }
 
-export const unauthorized = (res: Response, data: string): Response => {
+export const unauthorized = (res: Response, data: string | object): Response => {
     response = {
         status: 401,
         data
