@@ -3,22 +3,22 @@ import mongoose, {Schema} from 'mongoose';
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
         trim: true,
     },
     lastName: {
         type: String,
-        require: true,
+        required: true,
         trim: true,
     },
     email: {
         type: String,
-        require: true,
+        required: true,
         trim: true,
     },
     password: {
         type: String,
-        require: true,
+        required: true,
         trim: true
     },
     picture: {
@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
     },
     role_id: {
         type: Schema.Types.ObjectId,
-        require: true,
+        required: true,
         ref: "Role"
     },
     customer_id: {

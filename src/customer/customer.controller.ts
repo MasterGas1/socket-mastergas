@@ -7,11 +7,14 @@ import Customer from './customer.model';
 import User from '../user/user.model'
 import Roles from "../roles/roles.model";
 
-import { badRequest, internalServerError, notFound, okRequest, preconditionRequiredRequest } from "../helper/handleResponse";
+import { badRequest, internalServerError, notFound, okRequest, preconditionRequiredRequest, unauthorized } from "../helper/handleResponse";
 import validateRouteBody from "../helper/validateRoute";
 import parseMongoId from "../helper/parseMongoId";
 
 import { RequestMiddle } from "../user/user.middleware";
+
+import { userProps } from "../interfaces/user.interface";
+import { customerProps } from "../interfaces/customer.interface";
 
 
 export const createCustomer = async (req: Request, res: Response) => {
@@ -110,37 +113,73 @@ export const getByIdCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const updateCustomer = async (req: Request, res: Response) => {
+export const updateCustomerByToken = async (req: RequestMiddle, res: Response) => {
 
-    const {id} = req.params;
+    if(validateRouteBody(req,res))
+        return;
+
+    const {userId} = req;
 
     const {body} = req;
 
+    delete body.role_id
+    delete body.createdAt
+    delete body.customer_id
+    delete body.status
+
+    const session = await mongoose.startSession();
+
     try {
-        if(validateRouteBody(req,res))
-            return;
         
-        if(!parseMongoId(id))
+        if(!parseMongoId(userId)) {
             return badRequest(res, 'The id is not uuid');
+        }
+        
+        let user = await User.findById(userId);
 
-        let customer = await Customer.findById(id);
-
-        if (!customer) {
+        if (!user) {
             return notFound(res, 'The customer id not found')
+        }
+
+        if (!bcrypt.compareSync(body.password,user.password)){
+            return unauthorized(res,'Credentials are not valid (paswword)')
+        }
+
+        delete body.password
+
+        const repeatedEmail = await User.findOne({email: body.email})
+
+        if (repeatedEmail) {
+            return badRequest(res, `The email ${body.email} allready exist`)
+        }
+
+        session.startTransaction()
+
+        let customer = await Customer.findById(user?.customer_id)
+
+        if (!customer){
+            return badRequest(res,'The customer dont exist')
         }
 
         customer = await Customer.findOne({rfc: body.rfc})
 
         if (customer) {
-            return badRequest(res, 'The customer is already registered')
+            return badRequest(res, 'The rfc is already registered')
         }
 
-        customer = await Customer.findByIdAndUpdate(id, body,{new: true})
+        customer = await Customer.findByIdAndUpdate(user?.customer_id, body,{new: true}).session(session)
+        
+        user = await User.findByIdAndUpdate(userId, body, {new: true}).session(session).populate([{path: "role_id", select: "-_id"},{path: "customer_id", select: "-_id"}])
+        .select("-password -status");
 
-        okRequest(res, customer)
+        await session.commitTransaction() // Do the transaction create both collections
+        await session.endSession() 
+
+        okRequest(res, user)
     }catch(error){
         console.log(error);
-
+        session.abortTransaction()
+        session.endSession()
         return internalServerError(res);
     }
 }

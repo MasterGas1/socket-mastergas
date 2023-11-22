@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createCustomer, deleteCustomer, getCustomerByToken, updateCustomer } from "./customer.controller";
-import {validationCustomerCreate, validationCustomerUpdate} from './customer.validator'
+import { createCustomer, deleteCustomer, getCustomerByToken, updateCustomerByToken } from "./customer.controller";
+import { validationCustomerCreate, validationCustomerUpdate } from './customer.validator';
 import authMiddleware from "../user/user.middleware";
 
 
@@ -15,8 +15,15 @@ router.get('/',
     getCustomerByToken    
 );
 
-router.put('/:id', validationCustomerUpdate, updateCustomer);
+router.put('/',
+    authMiddleware,
+    validationCustomerUpdate,
+    validationCustomerUpdate, 
+    updateCustomerByToken);
 
-router.delete('/:id', deleteCustomer);
+router.delete('/', 
+    authMiddleware,
+    deleteCustomer
+);
 
 export default router;
