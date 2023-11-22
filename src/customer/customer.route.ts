@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCustomer, deleteCustomer, getCustomerByToken, updateCustomerByToken } from "./customer.controller";
+import { createCustomer, deleteByTokenCustomer, getCustomerByToken, updateCustomerByToken } from "./customer.controller";
 import { validationCustomerCreate, validationCustomerUpdate } from './customer.validator';
 import authMiddleware from "../user/user.middleware";
 
@@ -23,7 +23,7 @@ router.put('/',
 
 router.delete('/', 
     authMiddleware,
-    deleteCustomer
+    deleteByTokenCustomer
 );
 
 export default router;
