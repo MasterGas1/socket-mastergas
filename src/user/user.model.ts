@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
         require: true,
         trim: true
     },
+    role: {
+        ref: "Role",
+        type: Schema.Types.ObjectId,
+    },
     customer_id: {
         type: Schema.Types.ObjectId,
         ref: "custome"
