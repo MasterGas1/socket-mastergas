@@ -13,10 +13,6 @@ import parseMongoId from "../helper/parseMongoId";
 
 import { RequestMiddle } from "../user/user.middleware";
 
-import { userProps } from "../interfaces/user.interface";
-import { customerProps } from "../interfaces/customer.interface";
-
-
 export const createCustomer = async (req: Request, res: Response) => {
     
     if(validateRouteBody(req,res))
