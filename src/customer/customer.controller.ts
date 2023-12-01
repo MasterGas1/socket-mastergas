@@ -13,10 +13,6 @@ import parseMongoId from "../helper/parseMongoId";
 
 import { RequestMiddle } from "../user/user.middleware";
 
-import { userProps } from "../interfaces/user.interface";
-import { customerProps } from "../interfaces/customer.interface";
-
-
 export const createCustomer = async (req: Request, res: Response) => {
     
     if(validateRouteBody(req,res))
@@ -129,7 +125,8 @@ export const updateCustomerByToken = async (req: RequestMiddle, res: Response) =
     delete body.deleted
 
     const session = await mongoose.startSession();
-
+    
+    session.startTransaction()
     try {
         
         if(!parseMongoId(userId)) {
@@ -154,7 +151,6 @@ export const updateCustomerByToken = async (req: RequestMiddle, res: Response) =
             return badRequest(res, `The email ${body.email} allready exist`)
         }
 
-        session.startTransaction()
 
         let customer = await Customer.findById(user?.customer_id)
 

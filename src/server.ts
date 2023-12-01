@@ -1,5 +1,8 @@
 import express, { Application, json } from "express";
+import dotenv from 'dotenv';
 import cors from 'cors'
+
+import db from "../db/connection";
 
 import typeServiceRoutes from './type-service/type-service.route';
 import userRoutes from './user/user.route';
@@ -10,7 +13,7 @@ import seederRoutes from './seeder/seeder.route';
 
 class Server {
 
-    private app: Application;
+    public app: Application;
     private port: string;
     
     private apiPaths = {
@@ -25,17 +28,21 @@ class Server {
     private PATH = '/api/v1'
 
     constructor() {
+        dotenv.config();
         //Initialize express
         this.app = express();
 
         // Allow receive jsons into server
-        this.app.use( json());
+        this.app.use( json() );
 
         //Set Port of the server
         this.port = process.env.PORT || '4000';
 
         //Initialize routes
         this.routes()
+
+        //Connect db
+        db()
     }
 
     //Set routes 
