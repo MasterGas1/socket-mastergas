@@ -129,7 +129,8 @@ export const updateCustomerByToken = async (req: RequestMiddle, res: Response) =
     delete body.deleted
 
     const session = await mongoose.startSession();
-
+    
+    session.startTransaction()
     try {
         
         if(!parseMongoId(userId)) {
@@ -154,7 +155,6 @@ export const updateCustomerByToken = async (req: RequestMiddle, res: Response) =
             return badRequest(res, `The email ${body.email} allready exist`)
         }
 
-        session.startTransaction()
 
         let customer = await Customer.findById(user?.customer_id)
 

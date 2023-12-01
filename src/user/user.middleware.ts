@@ -14,7 +14,7 @@ const authMiddleware = (req: RequestMiddle,res:Response,next:NextFunction) => {
             return unauthorized(res,"It's necessary a token")
         }
 
-        const token = authorization.replace('Bearer', '')
+        const token = authorization.replace('Bearer ', '')
 
         const secretKey = process.env.SECRET_KEY || "S3CR3TK3Y$"
 
