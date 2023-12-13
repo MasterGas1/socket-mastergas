@@ -7,7 +7,7 @@ import authMiddleware from "../user/user.middleware";
 
 const router = Router();
 
-router.post('/', validationCustomerCreate, createCustomer);
+//router.post('/', validationCustomerCreate, createCustomer);
 
 //router.get('/', getAllCustomers);
 

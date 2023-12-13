@@ -7,8 +7,6 @@ const db = async() => {
         ?process.env.DB_NAME_TEST
         :process.env.DB_NAME
 
-        console.log(dataBaseName)
-
         //Set strictquery in mongoose
         mongoose.set('strictQuery', true);
         //Connection databse
