@@ -1,6 +1,6 @@
 import supertest = require("supertest")
 import Server from "../server"
-import mongoose from "mongoose"
+import mongoose, { Mongoose } from "mongoose"
 
 const PATH = '/api/v1'
 const server = new Server()
@@ -25,6 +25,11 @@ const servicePayloadSendPrice = {
     type: "price",
     father_service: "",
     price: 100
+}
+
+const servicePayloadUpdate = {
+    name: "Moto Actualizado",
+    description: "Moto super rapida actualizado",
 }
 
 const servicePayloadFailedField = {
@@ -168,6 +173,60 @@ describe('POST /service', () => {
         .send(servicePayloadPriceHaveSubService)
 
         expect(statusCode).toBe(400)
+    })
+})
+
+describe('GET /service', ()=> {
+    it('should return 200 OK should return services', async()=> {
+        const {statusCode, body} = await supertest(server.app).get(`${PATH}/service`)
+
+        expect(statusCode).toBe(200)
+        expect(Array.isArray(body.data)).toBe(true)
+        expect(body.data.length).toBeGreaterThan(0)
+    })
+})
+
+describe('GET /service/:id', ()=> {
+    it('should return 400 if the id is not uuid', async() => {
+        const {statusCode} = await supertest(server.app).get(`${PATH}/service/asdsadsada`)
+
+        expect(statusCode).toBe(400)
+
+    })
+
+    it('should return 404 if the service dont exist', async() => {
+        const {statusCode} = await supertest(server.app).get(`${PATH}/service/${new mongoose.Types.ObjectId()}`)
+
+        expect(statusCode).toBe(404)
+
+    })
+
+    it('should return 200 OK should return service', async()=> {
+        const {statusCode, body} = await supertest(server.app).get(`${PATH}/service/${idService}`)
+
+        expect(statusCode).toBe(200)
+        expect(body.data._id).toBe(idService)
+    })
+})
+
+describe('PUT /service/:id', ()=> {
+    it('should return 400 if the id is not uuid', async() => {
+        const {statusCode} = await supertest(server.app).put(`${PATH}/service/asdsadsada`)
+
+        expect(statusCode).toBe(400)
+    })
+
+    it('should return 404 if the service dont exist', async() => {
+        const {statusCode} = await supertest(server.app).put(`${PATH}/service/${new mongoose.Types.ObjectId()}`)
+
+        expect(statusCode).toBe(404)
+    })
+
+    it('should return 200 OK should return service updated', async()=> {
+        const {statusCode, body} = await supertest(server.app).put(`${PATH}/service/${idService}`)
+        .send(servicePayloadUpdate)
+
+        expect(statusCode).toBe(200)
     })
 })
 
