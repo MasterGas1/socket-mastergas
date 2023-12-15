@@ -10,6 +10,7 @@ import serviceRooute from './service/service.route'
 import addressRoutes from './address/address.route'
 import customerRoutes from './customer/customer.route'
 import seederRoutes from './seeder/seeder.route';
+import installerRoutes from './installer/installer.route';
 
 class Server {
 
@@ -22,7 +23,8 @@ class Server {
         service: '/service',
         seeder: '/seeder',
         address: '/address',
-        customer: '/customer'
+        customer: '/customer',
+        installer: '/installer',
     }
 
     private PATH = '/api/v1'
@@ -53,6 +55,7 @@ class Server {
         this.app.use(`${this.PATH}${this.apiPaths.address}`, addressRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.customer}`, customerRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
+        this.app.use(`${this.PATH}${this.apiPaths.installer}`, installerRoutes)
     }
 
     listen() { 
