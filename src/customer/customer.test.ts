@@ -47,10 +47,18 @@ const customerPayloadFiledDataType= {
     }
 }
 
+const customerSigInPayload = {
+    email: "mabg0610.oficial@gmail.com",
+    password: "Manu0610;"
+}
+
+const emptyCustomerSigInPayload = {}
+
+const noPasswprdCustomerSigInPayload = {
+    email: "mabg0610.oficial@gmail.com"
+}
+
 let token = ""
-
-
-
 
 describe('POST /user/customers', () => {
     it('should return 400 if the user  dont send nothing', async() => {
@@ -98,6 +106,59 @@ describe('POST /user/customers', () => {
 
         expect(statusCode).toBe(400)
     })
+})
+
+describe('POST /user/auth', () => {
+    it("shpuld return 200 and a token", async() => {
+        const {statusCode, body} = await supertest(server.app).post(`${PATH}/user/auth`)
+        .send(customerSigInPayload)
+
+        expect(statusCode).toBe(200)
+        expect(body.data.token).toBeDefined()
+    })
+
+    it("should return 400 if the user is empty", async() => {
+        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        .send(emptyCustomerSigInPayload)
+        
+        expect(statusCode).toBe(400)
+    })
+
+    it("should return 400 if the user dont send password", async() => {
+        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        .send(noPasswprdCustomerSigInPayload)
+        
+        expect(statusCode).toBe(400)
+    })
+
+    it ("should return 400 if the email string is not valid", async() => {
+        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        .send({email: "mabg0610.oficial@gmailcom", password: "Manu0610;"})
+        
+        expect(statusCode).toBe(400)
+    })
+
+    it ("should return 400 if the password length is less than 7", async() => {
+        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        .send({email: "mabg0610.oficial@gmail.com", password: "Manu06"})
+        
+        expect(statusCode).toBe(400)
+    })
+
+    it("should return 401 if the password is wrong", async() => {
+        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        .send({email: "mabg0610.oficial@gmail.com", password: "Manu0610hasj;"})
+        
+        expect(statusCode).toBe(401)
+    })
+
+    it("should return 401 if the user dont exist", async() => {
+        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        .send({email: "mabg.oficial@gmail.com", password: "Manu0610;"})
+        
+        expect(statusCode).toBe(401)
+    })
+
 })
 
 describe('GET /customer', ()=> {
