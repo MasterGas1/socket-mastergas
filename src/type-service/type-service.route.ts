@@ -4,7 +4,6 @@ import { createTypeService, getAllTypeServices, getByIdTypeServices, updateTypeS
 
 import { validationCreate, validationUpdate } from './type-service.validator';
 
-
 const router = Router();
 
 router.post('/',

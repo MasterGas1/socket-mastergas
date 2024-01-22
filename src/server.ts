@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors'
 
 import db from "../db/connection";
+import { swaggerDoc } from "../swagger/swagger";
 
 import typeServiceRoutes from './type-service/type-service.route';
 import userRoutes from './user/user.route';
@@ -55,7 +56,7 @@ class Server {
         this.app.use(`${this.PATH}${this.apiPaths.address}`, addressRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.customer}`, customerRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
-        this.app.use(`${this.PATH}${this.apiPaths.installer}`, installerRoutes)
+        this.app.use(`${this.PATH}${this.apiPaths.installer}`, installerRoutes);
     }
 
     listen() { 
@@ -63,6 +64,8 @@ class Server {
         this.app.listen(this.port, () => {
             console.log(`Server is running in port: ${this.port}`)
         })
+
+        swaggerDoc(this.app, this.port)
     }
 
 }
