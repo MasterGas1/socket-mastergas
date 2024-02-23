@@ -76,3 +76,5 @@ This command run the project, use the build folder to run it. Use the command **
 ### `npm start`
 
 This command run the two previous commands, the original command is **concurrently npm:start:\***
+
+To check the documentation we use swagger in the next url: /api/v1/api-docs
