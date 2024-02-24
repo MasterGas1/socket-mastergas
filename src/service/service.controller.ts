@@ -1,19 +1,13 @@
 import { Request, Response } from "express";
 import { Types } from "mongoose";
 
-import Service from './service.model';
+import Service  from './service.model';
 
 import { serviceProps } from "../interfaces/service.interface";
 
 import { badRequest, internalServerError, notFound, okRequest } from '../helper/handleResponse';
 import validateRouteBody from '../helper/validateRoute';
 import parseMongoId from "../helper/parseMongoId";
-
-declare module "express"{
-    interface Request{
-        body: any
-    }
-}
 
 export const createService = async (req: Request,res: Response) => {
 
