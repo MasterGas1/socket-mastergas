@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors'
 
 import db from "../db/connection";
+import { swaggerDoc } from "../swagger/swagger";
 
 import typeServiceRoutes from './type-service/type-service.route';
 import userRoutes from './user/user.route';
@@ -66,6 +67,8 @@ class Server {
         this.app.listen(this.port, () => {
             console.log(`Server is running in port: ${this.port}`)
         })
+
+        swaggerDoc(this.app, this.port)
     }
 
 }
