@@ -13,8 +13,6 @@ export const createRole = async (role: RoleType) => {
 
     const { name } = role
 
-    const session = await mongoose.startSession();
-
     const isRepeatedRole = await Role.findOne({ name });
     if (isRepeatedRole) {
         throw new Error(`Role with name: ${name} is repeated`);
@@ -44,13 +42,11 @@ export const updateRole = async (req: Request) => {
     const { id } = req.params
     const { name, permissions } = req.body
 
-    const session = await mongoose.startSession();
-
     if (!parseMongoId(id)) {
         throw new Error('The id is not uuid');
     }
 
-    const roleFound = await Role.findById(id).session(session);
+    const roleFound = await Role.findById(id);
     if (!roleFound) {
         throw new Error('Role not found');
     }
@@ -69,8 +65,6 @@ export const updateRole = async (req: Request) => {
         }
 
     )
-    await session.commitTransaction();
-    session.endSession();
 
     return roleUpdated;
 }
