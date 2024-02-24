@@ -20,8 +20,6 @@ export const createRole = async (role: RoleType) => {
         throw new Error(`Role with name: ${name} is repeated`);
     }
 
-    session.startTransaction(); // Start transaction, help us if there a problem when we are creating both collections make a rollback
-
     const newRole = new Role(role)
 
     await newRole.save();
@@ -47,7 +45,6 @@ export const updateRole = async (req: Request) => {
     const { name, permissions } = req.body
 
     const session = await mongoose.startSession();
-    session.startTransaction(); // Start transaction, help us if there a problem when we are creating both collections make a rollback
 
     if (!parseMongoId(id)) {
         throw new Error('The id is not uuid');
