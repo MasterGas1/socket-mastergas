@@ -9,13 +9,16 @@ let response:ResponseProps = {
     status:0
 };
 
-export const okRequest = ( res: Response, data?: String | Object[] | Object | null) : Response => {
-    response = {
-        status: 200,
-        data
-    }
+export const handleErrorResponse = (res: Response, data: string) : Response => {
+    const [status, message] = data.split('-');
 
-    return res.json(response);
+    return res.status(Number(status)).json({
+        message
+})
+}
+
+export const okRequest = ( res: Response, data?: String | Object[] | Object | null) : Response => {
+    return res.json(data);
 }
 
 export const badRequest = (res: Response ,data: string | object[]): Response => {

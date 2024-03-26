@@ -88,7 +88,7 @@ describe('POST /user/customers', () => {
         const {statusCode, body} = await supertest(server.app).post(`${PATH}/user/customer`)
         .send(customerPayload)
         
-        token = body.data.token
+        token = body.token
         
         expect(statusCode).toBe(200)
     })
@@ -109,12 +109,12 @@ describe('POST /user/customers', () => {
 })
 
 describe('POST /user/auth', () => {
-    it("shpuld return 200 and a token", async() => {
+    it("should return 200 and a token", async() => {
         const {statusCode, body} = await supertest(server.app).post(`${PATH}/user/auth`)
         .send(customerSigInPayload)
 
         expect(statusCode).toBe(200)
-        expect(body.data.token).toBeDefined()
+        expect(body.token).toBeDefined()
     })
 
     it("should return 400 if the user is empty", async() => {
@@ -214,7 +214,7 @@ describe('PUT /customer', ()=> {
     it('should return 400 if the rfc already exist', async() => {
         const {statusCode} = await supertest(server.app).put(`${PATH}/customer`)
         .set({Authorization: `Bearer ${token}`})
-        .send({password: "Manu0610;", rfc: "MEEM2699909H"})
+        .send({password: "Manu0610;", customer:{rfc: "MEEM2699909H"}})
 
         expect(statusCode).toBe(400)
     })
