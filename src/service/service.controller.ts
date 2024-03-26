@@ -1,17 +1,13 @@
 import { Request, Response } from "express";
+import { Types } from "mongoose";
 
-import Service from './service.model';
+import Service  from './service.model';
+
+import { serviceProps } from "../interfaces/service.interface";
 
 import { badRequest, internalServerError, notFound, okRequest } from '../helper/handleResponse';
-import { serviceProps } from "../interfaces/service.interface";
 import validateRouteBody from '../helper/validateRoute';
 import parseMongoId from "../helper/parseMongoId";
-
-declare module "express"{
-    interface Request{
-        body: any
-    }
-}
 
 export const createService = async (req: Request,res: Response) => {
 
@@ -128,6 +124,32 @@ export const updateService = async(req:Request,res:Response) => {
     }
 }
 
+export const deleteService = async(req:Request,res:Response) => {
+    
+    try{
+        const {id} = req.params;
+
+        if(!parseMongoId(id)) //Checks if the id is a uuid
+            return badRequest(res,'The id is not uuid');
+
+        let service = await Service.findById(id); // Find if exist the service
+
+        if(!service){
+            return notFound(res,'The service id not found');
+        }
+
+        for (let subservice of service.sub_services) {
+           deleteChildrens(subservice)
+        }
+
+        await service.delete();
+
+        okRequest(res,{msg: 'Service was deleted and all childrens was deleted'});
+    }catch(error){
+        console.log(error);
+        return internalServerError(res); //Return server error
+    }
+}
 
 const rootFather = async(body: serviceProps,res: Response) => {
     const fatherExist = await Service.findById(body.father_service);
@@ -153,10 +175,12 @@ const rootFather = async(body: serviceProps,res: Response) => {
     
             await service.save(); //Save new service
     
-            const updatedService = await Service.updateOne(
+            await Service.updateOne(
                 {_id: body.father_service},
                 {$push: {sub_services: service._id}}
-                )    
+            )
+            
+            const updatedService = await Service.findById(body.father_service)
     
             return okRequest(res,{service,updatedService}) //Return service
         })    
@@ -169,3 +193,19 @@ const rootFather = async(body: serviceProps,res: Response) => {
     }
 
 } 
+
+const deleteChildrens = async(id: Types.ObjectId) => {
+
+    const service = await Service.findById(id)
+
+    if(!service){
+        return
+    }
+
+    for (let subservice of service.sub_services) {
+        deleteChildrens(subservice)
+    }
+
+    await service.delete();
+    
+}

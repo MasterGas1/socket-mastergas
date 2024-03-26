@@ -52,7 +52,9 @@ export const authUser = async(req: Request, res: Response) => {
         if(!bcrypt.compareSync(password, user.password))
             return unauthorized(res,'Credentials are not valid (paswword)')
 
-        const token = jwt.sign({id: user._id},"SECRETO")
+        const secretKey = process.env.SECRET_KEY || "S3CR3TK3Y$"
+
+        const token = jwt.sign({id: user._id},secretKey)
 
         okRequest(res,{user,token: token})
     }catch(error){

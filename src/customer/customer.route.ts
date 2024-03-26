@@ -1,18 +1,30 @@
 import { Router } from "express";
-import { createCustomer, deleteCustomer, getByIdCustomers, updateCustomer } from "./customer.controller";
-import {validationCustomerCreate, validationCustomerUpdate} from './customer.validator'
+import { createCustomer, deleteByTokenCustomer, getCustomerByToken, updateCustomerByToken } from "./customer.controller";
+import { validationCustomerCreate, validationCustomerUpdate } from './customer.validator';
+import { validationUserUpdate } from "../user/user.validator";
+import authMiddleware from "../user/user.middleware";
 
 
 const router = Router();
 
-router.post('/', validationCustomerCreate, createCustomer);
+//router.post('/', validationCustomerCreate, createCustomer);
 
 //router.get('/', getAllCustomers);
 
-router.get('/:id', getByIdCustomers);
+router.get('/', 
+    authMiddleware,
+    getCustomerByToken    
+);
 
-router.put('/:id', validationCustomerUpdate, updateCustomer);
+router.put('/',
+    authMiddleware,
+    validationUserUpdate,
+    validationCustomerUpdate, 
+    updateCustomerByToken);
 
-router.delete('/:id', deleteCustomer);
+router.delete('/', 
+    authMiddleware,
+    deleteByTokenCustomer
+);
 
 export default router;

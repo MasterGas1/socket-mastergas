@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import mongoose_delete from 'mongoose-delete';
 
 const ServiceSchema = new mongoose.Schema({
 
@@ -45,5 +46,7 @@ const ServiceSchema = new mongoose.Schema({
         default: true
     }
 })
+
+ServiceSchema.plugin(mongoose_delete, {overrideMethods: 'all'})
 
 export default mongoose.model('Service',ServiceSchema);

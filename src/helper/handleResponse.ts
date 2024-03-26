@@ -9,13 +9,16 @@ let response:ResponseProps = {
     status:0
 };
 
-export const okRequest = ( res: Response, data?: String | Object[] | Object | null) : Response => {
-    response = {
-        status: 200,
-        data
-    }
+export const handleErrorResponse = (res: Response, data: string) : Response => {
+    const [status, message] = data.split('-');
 
-    return res.json(response);
+    return res.status(Number(status)).json({
+        message
+})
+}
+
+export const okRequest = ( res: Response, data?: String | Object[] | Object | null) : Response => {
+    return res.json(data);
 }
 
 export const badRequest = (res: Response ,data: string | object[]): Response => {
@@ -36,13 +39,22 @@ export const notFound = (res: Response,data: string): Response =>{
     return res.status(404).send(response)
 }
 
-export const unauthorized = (res: Response, data: string): Response => {
+export const unauthorized = (res: Response, data: string | object): Response => {
     response = {
         status: 401,
         data
     }
     
     return res.status(401).send(response)
+}
+
+export const preconditionRequiredRequest = (res:Response,data:Object) => {
+    response = {
+        status: 428,
+        data
+    }
+    
+    return res.status(428).json(response)
 }
 
 export const internalServerError = (res: Response): Response => {

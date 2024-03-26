@@ -1,5 +1,9 @@
 import express, { Application, json } from "express";
+import dotenv from 'dotenv';
 import cors from 'cors'
+
+import db from "../db/connection";
+import { swaggerDoc } from "../swagger/swagger";
 
 import typeServiceRoutes from './type-service/type-service.route';
 import userRoutes from './user/user.route';
@@ -7,10 +11,12 @@ import serviceRooute from './service/service.route'
 import addressRoutes from './address/address.route'
 import customerRoutes from './customer/customer.route'
 import seederRoutes from './seeder/seeder.route';
+import installerRoutes from './installer/installer.route';
+import roleRoutes from './roles/roles.route';
 
 class Server {
 
-    private app: Application;
+    public app: Application;
     private port: string;
     
     private apiPaths = {
@@ -19,23 +25,29 @@ class Server {
         service: '/service',
         seeder: '/seeder',
         address: '/address',
-        customer: '/customer'
+        customer: '/customer',
+        installer: '/installer',
+        role: '/role',
     }
 
     private PATH = '/api/v1'
 
     constructor() {
+        dotenv.config();
         //Initialize express
         this.app = express();
 
         // Allow receive jsons into server
-        this.app.use( json());
+        this.app.use( json() );
 
         //Set Port of the server
         this.port = process.env.PORT || '4000';
 
         //Initialize routes
         this.routes()
+
+        //Connect db
+        db()
     }
 
     //Set routes 
@@ -46,6 +58,8 @@ class Server {
         this.app.use(`${this.PATH}${this.apiPaths.address}`, addressRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.customer}`, customerRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
+        this.app.use(`${this.PATH}${this.apiPaths.installer}`, installerRoutes)
+        this.app.use(`${this.PATH}${this.apiPaths.role}`, roleRoutes)
     }
 
     listen() { 
@@ -53,6 +67,8 @@ class Server {
         this.app.listen(this.port, () => {
             console.log(`Server is running in port: ${this.port}`)
         })
+
+        swaggerDoc(this.app, this.port)
     }
 
 }
