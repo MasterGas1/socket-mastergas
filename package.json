@@ -9,7 +9,8 @@
     "start": "concurrently npm:start:*",
     "test:ios": "NODE_ENV=test jest --verbose -silent --watch",
     "test:windows": "set NODE_ENV=test && jest --verbose -silent --watch",
-    "test:winKevxx": "set NODE_ENV=test&& jest src/installer/installer.test.ts --verbose -silent --watch"
+    "test:winKevxx": "set NODE_ENV=test&& jest src/installer/installer.test.ts --verbose -silent --watch",
+    "test:iosManuel": "NODE_ENV=test jest src/customer/customer.test.ts --verbose -silent --watch"
   },
   "keywords": [],
   "author": "",

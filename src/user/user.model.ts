@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
   role_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Role',
+    ref: 'role',
   },
   customer_id: {
     type: Schema.Types.ObjectId,
