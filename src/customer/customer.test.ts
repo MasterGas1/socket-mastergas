@@ -2,6 +2,9 @@ import supertest = require("supertest")
 import Server from "../server"
 
 const PATH = '/api/v1'
+const ENDPOINTCUSTOMER = `${PATH}/user/customer`
+const ENDPOINTAUTH = `${PATH}/user/auth`
+
 const server = new Server()
 
 const customerPayload= {
@@ -9,10 +12,9 @@ const customerPayload= {
     lastName: "Medrano Espinosa",
     email: "mabg0610.oficial@gmail.com",
     password: "Manu0610;",
-    customer: {
-        rfc: "MEEM2699909H",
-        taxResidence: "Faro 2554"
-    }
+    rfc: "MEEM2699909H",
+    taxResidence: "Faro 2554"
+    
 }
 
 const customerPayloadRfcSame= {
@@ -20,20 +22,17 @@ const customerPayloadRfcSame= {
     lastName: "Medrano Espinosa",
     email: "mabg0610.oficial1@gmail.com",
     password: "Manu0610;",
-    customer: {
-        rfc: "MEEM2699909H",
-        taxResidence: "Faro 2554"
-    }
+    rfc: "MEEM2699909H",
+    taxResidence: "Faro 2554"
+    
 }
 
 const customerPayloadFailedField= {
     name:"Mayte",
     lastName: "Medrano Espinosa",
     email: "mabg0610.oficial@gmail.com",
-    customer: {
-        rfc: "MEEM2699909H",
-        taxResidence: "Faro 2554"
-    }
+    rfc: "MEEM2699909H",
+    taxResidence: "Faro 2554"
 }
 
 const customerPayloadFiledDataType= {
@@ -41,10 +40,8 @@ const customerPayloadFiledDataType= {
     lastName: "Medrano Espinosa",
     email: "mabg0610",
     password: "Manu0610;",
-    customer: {
-        rfc: "MEEM2699909H",
-        taxResidence: "Faro 2554"
-    }
+    rfc: "MEEM2699909H",
+    taxResidence: "Faro 2554"
 }
 
 const customerSigInPayload = {
@@ -118,42 +115,42 @@ describe('POST /user/auth', () => {
     })
 
     it("should return 400 if the user is empty", async() => {
-        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        const {statusCode} = await supertest(server.app).post(ENDPOINTAUTH)
         .send(emptyCustomerSigInPayload)
         
         expect(statusCode).toBe(400)
     })
 
     it("should return 400 if the user dont send password", async() => {
-        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        const {statusCode} = await supertest(server.app).post(ENDPOINTAUTH)
         .send(noPasswprdCustomerSigInPayload)
         
         expect(statusCode).toBe(400)
     })
 
     it ("should return 400 if the email string is not valid", async() => {
-        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        const {statusCode} = await supertest(server.app).post(ENDPOINTAUTH)
         .send({email: "mabg0610.oficial@gmailcom", password: "Manu0610;"})
         
         expect(statusCode).toBe(400)
     })
 
     it ("should return 400 if the password length is less than 7", async() => {
-        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        const {statusCode} = await supertest(server.app).post(ENDPOINTAUTH)
         .send({email: "mabg0610.oficial@gmail.com", password: "Manu06"})
         
         expect(statusCode).toBe(400)
     })
 
     it("should return 401 if the password is wrong", async() => {
-        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        const {statusCode} = await supertest(server.app).post(ENDPOINTAUTH)
         .send({email: "mabg0610.oficial@gmail.com", password: "Manu0610hasj;"})
         
         expect(statusCode).toBe(401)
     })
 
     it("should return 401 if the user dont exist", async() => {
-        const {statusCode} = await supertest(server.app).post(`${PATH}/user/auth`)
+        const {statusCode} = await supertest(server.app).post(ENDPOINTAUTH)
         .send({email: "mabg.oficial@gmail.com", password: "Manu0610;"})
         
         expect(statusCode).toBe(401)
@@ -161,26 +158,26 @@ describe('POST /user/auth', () => {
 
 })
 
-describe('GET /customer', ()=> {
+describe('GET /user/customer', ()=> {
     it("should return  401 when the toke is not valid", async() => {
-        await supertest(server.app).get(`${PATH}/customer`).expect(401)
+        await supertest(server.app).get(ENDPOINTCUSTOMER).expect(401)
     })
 
     it("should return 200 OK request get customer", async()=> {
-        const {statusCode} = await supertest(server.app).get(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).get(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
 
         expect(statusCode).toBe(200)
     })
 })
 
-describe('PUT /customer', ()=> {
+describe('PUT /user/customer', ()=> {
     it("should return  401 when the toke is not valid", async() => {
-        await supertest(server.app).put(`${PATH}/customer`).expect(401)
+        await supertest(server.app).put(ENDPOINTCUSTOMER).expect(401)
     })
 
     it('should return 400 if the user dont send password', async() => {
-        const {statusCode} = await supertest(server.app).put(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).put(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
         .send({name: 23423423423})
 
@@ -188,7 +185,7 @@ describe('PUT /customer', ()=> {
     })
 
     it('should return 400 if the user send wrong data type', async() => {
-        const {statusCode} = await supertest(server.app).put(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).put(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
         .send({password: "Manu0610;", name: 23423423423})
 
@@ -196,7 +193,7 @@ describe('PUT /customer', ()=> {
     })
 
     it('should return 401 if the password is wrong', async() => {
-        const {statusCode} = await supertest(server.app).put(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).put(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
         .send({password: "Manu0610hasj;", name: "Kevin"})
 
@@ -204,7 +201,7 @@ describe('PUT /customer', ()=> {
     })
 
     it('should return 400 if the email already exist', async() => {
-        const {statusCode} = await supertest(server.app).put(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).put(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
         .send({password: "Manu0610;", email: "mabg0610.oficial@gmail.com"})
 
@@ -212,15 +209,23 @@ describe('PUT /customer', ()=> {
     })
 
     it('should return 400 if the rfc already exist', async() => {
-        const {statusCode} = await supertest(server.app).put(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).put(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
-        .send({password: "Manu0610;", customer:{rfc: "MEEM2699909H"}})
+        .send({password: "Manu0610;", rfc: "MEEM2699909H"})
+
+        expect(statusCode).toBe(400)
+    })
+
+    it('should return 400 if dont send password to change email, rfc or password', async() => {
+        const {statusCode} = await supertest(server.app).put(ENDPOINTCUSTOMER)
+        .set({Authorization: `Bearer ${token}`})
+        .send({email: "mabg0610.oficial1@gmail.com", rfc: "MEEM2699909H"})
 
         expect(statusCode).toBe(400)
     })
 
     it('should return 200 OK request update customer', async()=> {
-        const {statusCode} = await supertest(server.app).put(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).put(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
         .send({password: "Manu0610;", name: "Mayte1"})
 
@@ -228,13 +233,13 @@ describe('PUT /customer', ()=> {
     })
 })
 
-describe('DELETE /customer', ()=> {
+describe('DELETE /user/customer', ()=> {
     it("should return  401 when the toke is not valid", async() => {
-        await supertest(server.app).delete(`${PATH}/customer`).expect(401)
+        await supertest(server.app).delete(ENDPOINTCUSTOMER).expect(401)
     })
 
     it('should return 200 OK request delete customer', async()=> {
-        const {statusCode} = await supertest(server.app).delete(`${PATH}/customer`)
+        const {statusCode} = await supertest(server.app).delete(ENDPOINTCUSTOMER)
         .set({Authorization: `Bearer ${token}`})
         
         expect(statusCode).toBe(200)
