@@ -9,10 +9,10 @@ import typeServiceRoutes from './type-service/type-service.route';
 import userRoutes from './user/user.route';
 import serviceRooute from './service/service.route'
 import addressRoutes from './address/address.route'
-import customerRoutes from './customer/customer.route'
 import seederRoutes from './seeder/seeder.route';
 import installerRoutes from './installer/installer.route';
 import roleRoutes from './roles/roles.route';
+import validationRoutes from './validation/validation.route'
 
 class Server {
 
@@ -28,6 +28,7 @@ class Server {
         customer: '/customer',
         installer: '/installer',
         role: '/role',
+        validation: '/validation'
     }
 
     private PATH = '/api/v1'
@@ -56,10 +57,10 @@ class Server {
         this.app.use(`${this.PATH}${this.apiPaths.user}`, userRoutes) //User
         this.app.use(`${this.PATH}${this.apiPaths.service}`, serviceRooute)
         this.app.use(`${this.PATH}${this.apiPaths.address}`, addressRoutes)
-        this.app.use(`${this.PATH}${this.apiPaths.customer}`, customerRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
         this.app.use(`${this.PATH}${this.apiPaths.installer}`, installerRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.role}`, roleRoutes)
+        this.app.use(`${this.PATH}${this.apiPaths.validation}`, validationRoutes)
     }
 
     listen() { 

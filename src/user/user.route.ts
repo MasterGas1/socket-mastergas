@@ -1,10 +1,10 @@
 import { Router } from 'express'
 
 import { authUser, postUser, getByIdUser, getUsers } from './user.controller'
-import { createCustomer } from '../customer/customer.controller';
+import { createCustomer, getCustomerByToken, updateCustomerByToken, deleteByTokenCustomer } from '../customer/customer.controller';
 
-import { validationUserCreate, validationAuthUser } from './user.validator';
-import { validationCustomerCreate } from '../customer/customer.validator';
+import { validationUserCreate, validationUserUpdate ,validationAuthUser } from './user.validator';
+import authMiddleware from './user.middleware';
 
 
 const router = Router();
@@ -12,10 +12,22 @@ const router = Router();
 //Customer
 router.post('/customer',
     validationUserCreate, //Validation user validation
-    validationCustomerCreate, // validation customer
     createCustomer
 )
+router.get('/customer', 
+    authMiddleware,
+    getCustomerByToken)
 
+router.put('/customer',
+    authMiddleware,
+    validationUserUpdate,
+    updateCustomerByToken
+)
+
+router.delete('/customer',
+    authMiddleware,
+    deleteByTokenCustomer
+)
 
 //User
 router.post('/auth',

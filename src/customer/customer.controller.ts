@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 
-import Customer from './customer.model';
-
 import {createCustomerService, getCustomerByTokenService, updateCustomerByTokenService, deleteCustomerByTokenService} from './customer.service'
 
 import { badRequest, handleErrorResponse, internalServerError, notFound, okRequest, preconditionRequiredRequest, unauthorized } from "../helper/handleResponse";
@@ -17,8 +15,8 @@ export const createCustomer = async (req: Request, res: Response) => {
 
     try {
         
-        const token = await createCustomerService(req.body);
-        return okRequest(res, {token});
+        const response = await createCustomerService(req.body);
+        return okRequest(res, response);
 
     } catch (error: any) {
         return handleErrorResponse(res, error.message);
@@ -31,24 +29,6 @@ export const getCustomerByToken = async (req: RequestMiddle, res: Response) => {
 
         okRequest(res,customer);
     }catch(error){
-        console.log(error);
-
-        return internalServerError(res);
-    }
-}
-
-export const getByIdCustomers = async (req: Request, res: Response) => {
-    
-    const {id} = req.params;
-
-    try {
-        if(!parseMongoId(id))
-            return badRequest(res, 'The id is nod uuid');
-
-        const customer = await Customer.findById(id);
-
-        okRequest(res, customer);
-    } catch (error) {
         console.log(error);
 
         return internalServerError(res);

@@ -2,7 +2,9 @@ import User from "./user.model";
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+
 import { badRequest } from "../helper/handleResponse";
+import messages from "../helper/messages";
 
 export const createUser = async (body: any, res: Response) => {
 
@@ -26,11 +28,11 @@ export const auth = async (body: any, res: Response) => {
     
     const user = await User.findOne({ email }).select('_id email password');
     if (!user) {
-        throw new Error('400-Credentials are not valid (email)');
+        throw new Error(messages['messagesSp'].authIncorrect);
     }
 
     if(!bcrypt.compareSync(password, user.password)) {
-        throw new Error('400-Credentials are not valid (password)');
+        throw new Error(messages['messagesSp'].authIncorrect);
     }
 
     const secretKey = process.env.SECRET_KEY || "S3CR3TK3Y$";
