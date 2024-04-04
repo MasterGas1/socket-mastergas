@@ -9,8 +9,8 @@ export const validationCreate = [
     check('type','The type is necessary').not().isEmpty(),
     check('type','The type is a string').isString(),
     check('type','The type only can be root service, subservice, price').isIn(['root service','subservice','price']),
-    check('father_service','The father_service is mongoId').optional().isMongoId(),
-    check('sub_services','The sub_services is mongoId').optional().isMongoId(), 
+    check('fatherService','The fatherService is mongoId').optional().isMongoId(),
+    check('subServices','The subServices is mongoId').optional().isMongoId(), 
     check('price','The price is a number').optional().isNumeric()
 ]
 
