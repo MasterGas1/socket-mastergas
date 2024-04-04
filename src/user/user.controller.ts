@@ -32,9 +32,9 @@ export const authUser = async(req: Request, res: Response) => {
 
     try{
 
-        const {user,token} = await auth(req.body,res)
+        const {user,token, role} = await auth(req.body,res)
 
-        okRequest(res,{user,token: token})
+        okRequest(res,{name: user.name, lastNae: user.lastName ,token: token, role: role?.name})
     }catch(error: any){
         
         return handleErrorResponse(res, error.message);
