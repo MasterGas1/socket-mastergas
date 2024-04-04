@@ -15,13 +15,27 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   password: {
     type: String,
     required: true,
     trim: true,
   },
+  rfc:{
+      type: String,
+      default: '',
+      trim: true
+  },
+  taxResidence:{
+      type: String,
+      default: '',
+      trim: true
+  },
+  addresses: [{
+      type: Schema.Types.ObjectId,
+      ref: 'address'
+  }],
   picture: {
     type: String,
     default:

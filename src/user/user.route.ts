@@ -1,21 +1,33 @@
-import {Router} from 'express'
+import { Router } from 'express'
 
-import { authUser, createUser, getByIdUser, getUsers } from './user.controller'
-import { createCustomer } from '../customer/customer.controller';
+import { authUser, postUser, getByIdUser, getUsers } from './user.controller'
+import { createCustomer, getCustomerByToken, updateCustomerByToken, deleteByTokenCustomer } from '../customer/customer.controller';
 
-import { validationUserCreate, validationAuthUser } from './user.validator';
-import { validationCustomerCreate } from '../customer/customer.validator';
+import { validationUserCreate, validationUserUpdate ,validationAuthUser } from './user.validator';
+import authMiddleware from './user.middleware';
 
 
- const router = Router();
+const router = Router();
 
 //Customer
 router.post('/customer',
     validationUserCreate, //Validation user validation
-    validationCustomerCreate, // validation customer
     createCustomer
 )
+router.get('/customer', 
+    authMiddleware,
+    getCustomerByToken)
 
+router.put('/customer',
+    authMiddleware,
+    validationUserUpdate,
+    updateCustomerByToken
+)
+
+router.delete('/customer',
+    authMiddleware,
+    deleteByTokenCustomer
+)
 
 //User
 router.post('/auth',
@@ -23,12 +35,12 @@ router.post('/auth',
     authUser
 )
 
-//  router.post('/', 
-//     validationCreate,
-//     createUser);
+router.post('/',
+    validationUserCreate,
+    postUser);
 
 router.get('/', getUsers);
 
 router.get('/:id', getByIdUser);
 
- export default router;
+export default router;
