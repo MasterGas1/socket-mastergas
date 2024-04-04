@@ -16,14 +16,14 @@ const servicePayloadSendSubService = {
     name: "Moto Extra",
     description: "Moto super rapida extra",
     type: "subservice",
-    father_service: ""
+    fatherService: ""
 }
 
 const servicePayloadSendPrice = {
     name: "Moto Extra",
     description: "Moto super rapida extra",
     type: "price",
-    father_service: "",
+    fatherService: "",
     price: 100
 }
 
@@ -53,21 +53,28 @@ const servicePayloadFatherServiceFailed = {
     name: "Moto Extra",
     description: "Moto super rapida extra",
     type: "root service",
-    father_service: new mongoose.Types.ObjectId()
+    fatherService: new mongoose.Types.ObjectId()
 }
 
 const servicePayloadSubServiceNotFoundFatherService = {
     name: "Moto Extra",
     description: "Moto super rapida extra",
     type: "subservice",
-    father_service: new mongoose.Types.ObjectId()
+    fatherService: new mongoose.Types.ObjectId()
 }
 
 const servicePayloadPriceHaveSubService = {
     name: "Moto Extra",
     description: "Moto super rapida extra",
     type: "subservice",
-    father_service: ""
+    fatherService: ""
+}
+
+const servicePayloadPriceDontHavePrice = {
+    name: "Moto Extra",
+    description: "Moto super rapida extra",
+    type: "price",
+    fatherService: ""
 }
 
 let idService = ""
@@ -116,8 +123,10 @@ describe('POST /service', () => {
         const {statusCode, body} = await supertest(server.app).post(`${PATH}/service`)
         .send(servicePayloadRootFather)
 
-        servicePayloadSendSubService.father_service = body.data._id
-        idService = body.data._id
+        servicePayloadSendSubService.fatherService = body._id
+        
+        idService = body._id
+
 
         expect(statusCode).toBe(200)
     })
@@ -140,7 +149,7 @@ describe('POST /service', () => {
         const {statusCode, body} = await supertest(server.app).post(`${PATH}/service`)
         .send(servicePayloadSendSubService)
 
-        servicePayloadSendPrice.father_service = body.data.service._id
+        servicePayloadSendPrice.fatherService = body.service._id
 
         expect(statusCode).toBe(200)
     })
@@ -152,11 +161,18 @@ describe('POST /service', () => {
         expect(statusCode).toBe(400)
     })
 
+    it('should return 400 if price dont have price', async() => {
+        const {statusCode} = await supertest(server.app).post(`${PATH}/service`)
+        .send(servicePayloadPriceDontHavePrice)
+
+        expect(statusCode).toBe(400)
+    })
+
     it('should return 200 return price', async() => {
         const {statusCode, body} = await supertest(server.app).post(`${PATH}/service`)
         .send(servicePayloadSendPrice)
 
-        servicePayloadPriceHaveSubService.father_service = body.data.service._id
+        servicePayloadPriceHaveSubService.fatherService = body.service._id
 
         expect(statusCode).toBe(200)
     })
@@ -181,8 +197,8 @@ describe('GET /service', ()=> {
         const {statusCode, body} = await supertest(server.app).get(`${PATH}/service`)
 
         expect(statusCode).toBe(200)
-        expect(Array.isArray(body.data)).toBe(true)
-        expect(body.data.length).toBeGreaterThan(0)
+        expect(Array.isArray(body)).toBe(true)
+        expect(body.length).toBeGreaterThan(0)
     })
 })
 
@@ -205,7 +221,7 @@ describe('GET /service/:id', ()=> {
         const {statusCode, body} = await supertest(server.app).get(`${PATH}/service/${idService}`)
 
         expect(statusCode).toBe(200)
-        expect(body.data._id).toBe(idService)
+        expect(body._id).toBe(idService)
     })
 })
 
@@ -243,7 +259,7 @@ describe('DELETE /service', ()=> {
         expect(statusCode).toBe(200)
     })
 
-    it('should return 400 if the service dont exist', async() => {
+    it('should return 404 if the service dont exist', async() => {
         const {statusCode} = await supertest(server.app).delete(`${PATH}/service/${idService}`)
 
         expect(statusCode).toBe(404)

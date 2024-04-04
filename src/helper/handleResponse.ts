@@ -10,14 +10,21 @@ let response:ResponseProps = {
 };
 
 export const handleErrorResponse = (res: Response, data: string) : Response => {
-    const [status, message] = data.split('-');
-
-    return res.status(Number(status)).json({
-        message
-})
+   try {
+       const [status, message] = data.split('-');
+   
+       return res.status(Number(status)).json({
+           message
+       })
+   }catch (error){
+        console.log(error)
+        return res.status(500).json({
+            message: 'Cant execute request - Check server logs'
+        })
+   }
 }
 
-export const okRequest = ( res: Response, data?: String | Object[] | Object | null) : Response => {
+export const okRequest = ( res: Response, data?: String | Object[] | Object | null | unknown) : Response => {
     return res.json(data);
 }
 
