@@ -1,10 +1,10 @@
-export interface serviceProps{
+export interface serviceInterface{
     name: string,
     description: string,
     image?: string,
     type: 'root service' | 'subservice' | 'price',
-    sub_service?:string,
-    father_service?: string,
+    subServices?:string,
+    fatherService?: string,
     price?:number,
     available?:boolean
 }

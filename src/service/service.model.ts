@@ -28,12 +28,12 @@ const ServiceSchema = new mongoose.Schema({
         required: true
     },
 
-    father_service: {
+    fatherService: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service'
     },
 
-    sub_services:[{
+    subServices:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service'
     }],
