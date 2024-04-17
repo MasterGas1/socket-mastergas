@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import validateRouteBody from '../helper/validateRoute';
 import { okRequest, badRequest, internalServerError, handleErrorResponse } from '../helper/handleResponse';
 import parseMongoId from '../helper/parseMongoId';
-import { getAllUsers, getOneUser, createUser, auth } from './user.service';
+import { getAllUsers, getOneUser, createUser, auth, addUserAddress } from './user.service';
 
 export const postUser = async(req: Request, res: Response) => {
 
@@ -69,5 +69,22 @@ export const getByIdUser = async(req: Request, res: Response) => {
         console.log(error)
 
         return internalServerError(res)
+    }
+}
+
+export const addAddress = async(req: Request, res: Response) => {
+    const {body} = req
+
+    const { id } = req.params
+
+    try {
+        const user = await addUserAddress(body, id, res)
+
+        okRequest(res,user)
+    }catch(error) {
+        if (error instanceof Error) {
+            return badRequest(res, error.message);
+        }
+        return internalServerError(res);
     }
 }

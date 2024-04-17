@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { authUser, postUser, getByIdUser, getUsers } from './user.controller'
+import { authUser, postUser, getByIdUser, getUsers, addAddress } from './user.controller'
 import { createCustomer, getCustomerByToken, updateCustomerByToken, deleteByTokenCustomer } from '../customer/customer.controller';
 
 import { validationUserCreate, validationUserUpdate ,validationAuthUser } from './user.validator';
@@ -42,5 +42,7 @@ router.post('/',
 router.get('/', getUsers);
 
 router.get('/:id', getByIdUser);
+
+router. post('/add-address/:id', addAddress);
 
 export default router;
