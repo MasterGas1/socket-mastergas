@@ -12,7 +12,7 @@ Install librarys use the command:
 
 ## Available Scripts
 
-Inside The project you can run:
+Inside The project you can run (is necessary to execute this one for the fist time because when you start the prject with `npm start:run` there will be a error):
 
 ### `npm start:build`
 
