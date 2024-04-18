@@ -11,3 +11,11 @@ describe('GET /seeder/roles', () => {
         expect(statusCode).toBe(200)
     })
 })
+
+describe('GET /seeder/admin', () => {
+    it('should return 200 OK', async() => {
+        const {statusCode} = await supertest(server.app).get(`${PATH}/seeder/admin`)
+
+        expect(statusCode).toBe(200)
+    })
+})
