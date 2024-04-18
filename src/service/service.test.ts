@@ -225,6 +225,29 @@ describe('GET /service/:id', ()=> {
     })
 })
 
+describe('GET /service/subservices/:id', ()=> {
+    it('should return 400 if the id is not uuid', async() => {
+        const {statusCode} = await supertest(server.app).get(`${PATH}/service/subservices/asdsadsada`)
+
+        expect(statusCode).toBe(400)
+
+    })
+
+    it('should return 404 if the service dont exist', async() => {
+        const {statusCode} = await supertest(server.app).get(`${PATH}/service/subservices/${new mongoose.Types.ObjectId()}`)
+
+        expect(statusCode).toBe(404)
+
+    })
+
+    it('should return 200 OK should return service', async()=> {
+        const {statusCode, body} = await supertest(server.app).get(`${PATH}/service/subservices/${idService}`)
+
+        expect(statusCode).toBe(200)
+        expect.arrayContaining(body)
+    })
+})
+
 describe('PUT /service/:id', ()=> {
     it('should return 400 if the id is not uuid', async() => {
         const {statusCode} = await supertest(server.app).put(`${PATH}/service/asdsadsada`)
