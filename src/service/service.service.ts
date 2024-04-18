@@ -58,6 +58,15 @@ export const getOneServiceService = async (id: string) => {
     return service;
 }
 
+export const getAllServicesService = async (id: string) => {
+    const service = await Service.find({fatherService: id}).select('-type -subServices -__v -deleted')
+
+    if(service.length === 0)
+        throw new Error(messages["messagesSp"].serviceNotFound)
+
+    return service
+}
+
 export const updateServiceService = async (id: string, body: serviceInterface) => {
     const {name, fatherService, available} = body
 

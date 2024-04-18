@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Types } from "mongoose";
 
 import Service  from './service.model';
-import { createServiceService, deleteServiceService, getOneServiceService, getRootServicesService, updateServiceService } from "./service.service";
+import { createServiceService, deleteServiceService, getAllServicesService, getOneServiceService, getRootServicesService, updateServiceService } from "./service.service";
 
 import { badRequest, handleErrorResponse, internalServerError, notFound, okRequest } from '../helper/handleResponse';
 import validateRouteBody from '../helper/validateRoute';
@@ -54,6 +54,22 @@ export const getOneService = async(req: Request, res: Response) => {
     }catch(error: any){
         console.log(error);
         return handleErrorResponse(res, error.message); //Return server error
+    }
+}
+
+export const getSubservices = async(req: Request, res: Response) => {
+    try {
+
+        const {id} = req.params;
+        
+        if(!parseMongoId(id)) //Checks if the id is a uuid
+            return badRequest(res,'The id is not uuid');
+
+        const subservices = await getAllServicesService(id);
+
+        okRequest(res,subservices)
+    } catch (error: any) {
+        return handleErrorResponse(res, error.message);
     }
 }
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createService, deleteService, getOneService, getRootServices, updateService } from './service.controller';
+import { createService, deleteService, getOneService, getRootServices, getSubservices, updateService } from './service.controller';
 import { validationCreate, validationUpdate } from './service.validator';
 
 const router = Router();
@@ -13,6 +13,8 @@ router.post('/',
 router.get('/',getRootServices)
 
 router.get('/:id',getOneService)
+
+router.get('/subservices/:id', getSubservices)
 
 router.put('/:id',
     validationUpdate,
