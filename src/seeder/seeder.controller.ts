@@ -4,9 +4,11 @@ import { internalServerError, okRequest } from "../helper/handleResponse";
 
 import TypeService from "../type-service/type-service.model";
 import Roles from "../roles/roles.model";
+import User from "../user/user.model";
 
 import { dataTypeService } from './data/dataTypeService';
 import { dataRoles } from "./data/dataRoles";
+import { dataAdmin } from "./data/dataAdmin";
 
 export const createTypeService = async(req: Request,res: Response) => {
     try{
@@ -29,6 +31,24 @@ export const createRoles = async(req: Request, res: Response) => {
 
         await Roles.insertMany(dataRoles)
         okRequest(res,'Seeder roles was executed')
+    }catch(error){
+        console.log(error)
+        return internalServerError(res) // Return server error
+    }
+}
+export const createAdmin = async(req: Request, res: Response) => {
+    try{
+        await User.deleteMany();
+
+        const adminRole = await Roles.findOne({name:'admin'})
+
+        dataAdmin.role_id = adminRole?._id;
+
+        const user = new User(dataAdmin)
+
+        await user.save()
+        okRequest(res,'User roles was executed')
+
     }catch(error){
         console.log(error)
         return internalServerError(res) // Return server error
