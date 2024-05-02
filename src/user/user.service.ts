@@ -1,6 +1,6 @@
 import User from "./user.model";
 import Address from "../address/address.model"
-import { Response } from 'express';
+import { Request, Response } from "express";
 import * as bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import Roles from '../roles/roles.model'
@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 
 import { badRequest } from "../helper/handleResponse";
 import messages from "../helper/messages";
+import validateRouteBody from "../helper/validateRoute";
+import parseMongoId from "../helper/parseMongoId";
 
 export const createUser = async (body: any, res: Response) => {
 
@@ -47,9 +49,9 @@ export const auth = async (body: any, res: Response) => {
     return { token, user, role };
 }
 
-export const getOneUser = (id: string) => {
+export const getOneUser = async (id: string) => {
 
-    return User.findById(id)
+    const user = await User.findById(id)
 }
 
 export const getAllUsers = async () => {
@@ -59,39 +61,53 @@ export const getAllUsers = async () => {
     return users;
 }
 
-export const addUserAddress = async (body: any, id: string, res: Response) => {
+export const addUserAddress = async (req: Request, res: Response) => {
 
-    const { name } = body;
+    const { body } = req
 
-    const objectId = mongoose.Types.ObjectId(id);
+    const { id } = req.params
 
-    const findAddress = await Address.findOne({ name });
+    if (validateRouteBody(req, res))
+        return;
 
-    if (!findAddress) {
-        throw new Error('The address is not registere')
+    const isAddressRepeat = await Address.findOne({ name: body.name });
+
+    if (isAddressRepeat) {
+        throw new Error('The address is already registered')
     }
-    const addressId = mongoose.Types.ObjectId(findAddress?._id);
+    try {
+        const address = new Address(body);
 
-    const user = await User.findById(id);
+        const newAddress = await address.save();
 
-    const addresses = user?.addresses;
+        if (!parseMongoId(id))// Verify if the id is valid
+            throw new Error('The id is not uuid')
 
-    const isRepeat = await addresses?.find(address => address.toString() === findAddress?._id.toString());
+        const user = await User.findById(id);
 
-    if (isRepeat) {
-        throw new Error('The address is already registered on this user')
+        const addresses = user?.addresses;
+
+        const isRepeat = await addresses?.find(address => address.toString() === newAddress?._id.toString());
+
+        if (isRepeat) {
+            throw new Error('The address is already registered on this user')
+        }
+        addresses?.push(newAddress._id);
+
+        const userUpdated = await User.findOneAndUpdate(
+            { _id: id },
+            {
+                $set: {
+                    addresses: addresses
+                }
+            },
+            { new: true }
+        ).populate('addresses');
+
+        return userUpdated;
+
+    } catch (error) {
+        throw new Error('Internal server error');
     }
-    addresses?.push(addressId);
 
-    const userUpdated = await User.findOneAndUpdate(
-        { _id: objectId },
-        {
-            $set: {
-                addresses: addresses
-            }
-        },
-        { new: true }
-    ).populate('addresses');
-
-    return userUpdated;
 }

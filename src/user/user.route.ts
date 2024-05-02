@@ -1,9 +1,10 @@
 import { Router } from 'express'
 
-import { authUser, postUser, getByIdUser, getUsers, addAddress } from './user.controller'
+import { authUser, postUser, getByIdUser, getUsers, createAndAddAddress } from './user.controller'
 import { createCustomer, getCustomerByToken, updateCustomerByToken, deleteByTokenCustomer } from '../customer/customer.controller';
 
-import { validationUserCreate, validationUserUpdate ,validationAuthUser } from './user.validator';
+import { validationUserCreate, validationUserUpdate, validationAuthUser } from './user.validator';
+import {validationCreate as validationCreateAndAddAddress} from '../address/address.validator';
 import authMiddleware from './user.middleware';
 
 
@@ -14,7 +15,7 @@ router.post('/customer',
     validationUserCreate, //Validation user validation
     createCustomer
 )
-router.get('/customer', 
+router.get('/customer',
     authMiddleware,
     getCustomerByToken)
 
@@ -43,6 +44,8 @@ router.get('/', getUsers);
 
 router.get('/:id', getByIdUser);
 
-router. post('/add-address/:id', addAddress);
+router.post('/add-address/:id',
+    validationCreateAndAddAddress,
+    createAndAddAddress);
 
 export default router;
