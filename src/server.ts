@@ -41,6 +41,9 @@ class Server {
         // Allow receive jsons into server
         this.app.use( json() );
 
+        //Allow cors
+        this.app.use(cors())
+
         //Set Port of the server
         this.port = process.env.PORT || '4000';
 

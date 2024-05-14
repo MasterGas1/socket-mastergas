@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as bcrypt from 'bcrypt';
 
 import { internalServerError, okRequest } from "../helper/handleResponse";
 
@@ -42,6 +43,8 @@ export const createAdmin = async(req: Request, res: Response) => {
 
         const adminRole = await Roles.findOne({name:'admin'})
 
+
+        dataAdmin.password = bcrypt.hashSync(dataAdmin.password,10)
         dataAdmin.role_id = adminRole?._id;
 
         const user = new User(dataAdmin)
