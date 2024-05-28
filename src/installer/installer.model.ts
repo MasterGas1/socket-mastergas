@@ -1,44 +1,42 @@
 import { Schema, model } from 'mongoose';
 import mongoose_delete from 'mongoose-delete';
 import {
-  Certification,
   InstallerProps,
-  SecurityCourse,
-  SocialMedia,
 } from '../interfaces/installer.interface';
 
-const SocialMediaSchema = new Schema<SocialMedia>({
-  name: {
-    type: String,
-    required: true,
-  },
-  url: {
-    type: String,
-    required: true,
-  },
-});
-
-const CertificationSchema = new Schema<Certification>({
-  name: {
-    type: String,
-    required: true,
-  },
-});
-
-const SecurityCourseSchema = new Schema<SecurityCourse>({
-  name: {
-    type: String,
-    required: true,
-  },
-});
 
 const InstallerSchema = new Schema<InstallerProps>({
-  address: {
+  companyName: {
     type: String,
     require: true,
     trim: true,
   },
-  country: {
+  phoneNumber: {
+    type: String,
+    require: true,
+  },
+  IMMSNumber: {
+    type: Number,
+    require: true,
+  },
+  website: {
+    type: String,
+    require: true,
+    trim: true,
+  },
+  employeesNumber: {
+    type: Number,
+    require: true
+  },
+  ownOffice: {
+    type: Boolean,
+    require: true,
+  },
+  ownVehicle: {
+    type: Boolean,
+    require: true,
+  },
+  state: {
     type: String,
     require: true,
     trim: true,
@@ -48,53 +46,27 @@ const InstallerSchema = new Schema<InstallerProps>({
     require: true,
     trim: true,
   },
-  state: {
+  address: {
     type: String,
     require: true,
     trim: true,
   },
-  rfc: {
+  specializedTools: {
     type: String,
     require: true,
     trim: true,
   },
-  phoneNumber: {
-    type: String,
-    require: true,
-    trim: true,
-  },
-  website: {
-    type: String,
-    require: true,
-    trim: true,
-  },
-  employeesNumber: {
+  yearsExperience: {
     type: Number,
     require: true,
-    trim: true,
-  },
-  yearsOfExperience: {
-    type: Number,
-    require: true,
-    trim: true,
-  },
-  physicalPerson: {
-    type: Boolean,
-    require: true,
-    trim: true,
-  },
-  socialMedia: {
-    type: [SocialMediaSchema],
-    require: true,
-    trim: true,
   },
   certifications: {
-    type: [CertificationSchema],
+    type: String,
     require: true,
     trim: true,
   },
   securityCourses: {
-    type: [SecurityCourseSchema],
+    type: String,
     require: true,
     trim: true,
   },

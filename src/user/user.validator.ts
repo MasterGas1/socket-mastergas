@@ -35,3 +35,14 @@ export const validationAuthUser = [
     check('password','The passwords requires 8 characters minimum').isLength({min:8}),
     check('password','The password needs to be string').isString()
 ]
+
+export const validationUserInstallerCreate = [
+    check('name','name is required in user')
+        .not().isEmpty(),
+    check('lastName','lastName is required in user')
+        .not().isEmpty(),
+    check('email','email is required and should be a email in user')
+        .not().isEmpty().isEmail(),
+    check('rfc', 'The rfc is required in user')
+        .not().isEmpty().isLength({min: 12, max:13}),
+]

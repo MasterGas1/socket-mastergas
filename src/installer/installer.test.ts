@@ -8,142 +8,93 @@ const installerPayload = {
   name: 'Kevin',
   lastName: 'Paez',
   email: 'kevin@gmail.com',
-  password: 'kevin1234',
+  rfc: 'ABC123456789',
   installer: {
-    address: '123 Main St',
-    country: 'Mexico',
-    city: 'CDMX',
-    state: 'CDMX',
-    rfc: 'ABC123456789',
-    phoneNumber: '123-456-7890',
-    website: 'https://newpage.mypage.com',
+    companyName: "My Company",
+    phoneNumber: '1234567890',
+    IMSSNumber: 12345678901,
     employeesNumber: 10,
-    yearsOfExperience: 5,
-    physicalPerson: true,
-    socialMedia: [
-      {
-        name: 'Facebook',
-        url: 'https://www.facebook.com/newpage',
-      },
-    ],
-    certifications: [
-      {
-        name: 'Certification 1',
-      },
-    ],
-    securityCourses: [
-      {
-        name: 'Security Course 1',
-      },
-    ],
+    webSite: 'https://newpage.mypage.com',
+    ownOffice: true,
+    ownVehicle: false,
+    address: '123 Main St',
+    state: 'CDMX',
+    city: 'CDMX',
+    specializedTools: "Herramienta",
+    yearsExperience: 5,
+    certifications: "Certificación",
+    securityCourses: "Curso de seguridad",    
   },
 };
 
-const installerPayloadRfcSame = {
+const installerPayloadRFCSame = {
   name: 'Kevin',
   lastName: 'Paez',
   email: 'kevin@gmail.com',
-  password: 'kevin1234',
+  rfc: 'ABC123456789',
   installer: {
-    address: '123 Main St',
-    country: 'Mexico',
-    city: 'CDMX',
-    state: 'CDMX',
-    rfc: 'ABC123456789',
-    phoneNumber: '123-456-7890',
-    website: 'https://newpage.mypage.com',
+    companyName: "My Company",
+    phoneNumber: '1234567890',
+    IMMSNumber: 1234567890,
     employeesNumber: 10,
-    yearsOfExperience: 5,
-    physicalPerson: true,
-    socialMedia: [
-      {
-        name: 'Facebook',
-        url: 'https://www.facebook.com/newpage',
-      },
-    ],
-    certifications: [
-      {
-        name: 'Certification 1',
-      },
-    ],
-    securityCourses: [
-      {
-        name: 'Security Course 1',
-      },
-    ],
+    website: 'https://newpage.mypage.com',
+    ownOffice: true,
+    ownVehicle: false,
+    address: '123 Main St',
+    state: 'CDMX',
+    city: 'CDMX',
+    specializedTools: "Herramienta",
+    yearsExperience: 5,
+    certifications: "Certificación",
+    securityCourses: "Curso de seguridad",    
   },
 };
 
-const installerPayloadFailedField = {
+const installerPayloadFailedField = {  
   name: 'Kevin',
   lastName: 'Paez',
   email: 'kevin@gmail.com',
   installer: {
-    address: '123 Main St',
-    country: 'Mexico',
-    city: 'CDMX',
-    state: 'CDMX',
-    rfc: 'ABC123456789',
-    phoneNumber: '123-456-7890',
-    website: 'https://newpage.mypage.com',
+    companyName: "My Company",
+    phoneNumber: '1234567890',
+    IMMSNumber: 1234567890,
     employeesNumber: 10,
-    yearsOfExperience: 5,
-    physicalPerson: true,
-    socialMedia: [
-      {
-        name: 'Facebook',
-        url: 'https://www.facebook.com/newpage',
-      },
-    ],
-    certifications: [
-      {
-        name: 'Certification 1',
-      },
-    ],
-    securityCourses: [
-      {
-        name: 'Security Course 1',
-      },
-    ],
+    website: 'https://newpage.mypage.com',
+    ownOffice: true,
+    ownVehicle: false,
+    address: '123 Main St',
+    state: 'CDMX',
+    city: 'CDMX',
+    specializedTools: "Herramienta",
+    yearsExperience: 5,
+    securityCourses: "Curso de seguridad",    
   },
 };
 
 const installerPayloadFiledDataType = {
-  name: 23423423423,
-  lastName: 'Medrano Espinosa',
-  email: 'mabg0610',
-  password: 'Manu0610;',
+  name: 'Kevin',
+  lastName: 'Paez',
+  email: 'kevin@gmail.com',
+  rfc: 34543543,
   installer: {
-    address: '123 Main St',
-    country: 'Mexico',
-    city: 'CDMX',
-    state: 'CDMX',
-    rfc: 'ABC123456789',
-    phoneNumber: '123-456-7890',
-    website: 'https://newpage.mypage.com',
+    companyName: "My Company",
+    phoneNumber: '1234567890',
+    IMMSNumber: 1234567890,
     employeesNumber: 10,
-    yearsOfExperience: 5,
-    physicalPerson: true,
-    socialMedia: [
-      {
-        name: 'Facebook',
-        url: 'https://www.facebook.com/newpage',
-      },
-    ],
-    certifications: [
-      {
-        name: 'Certification 1',
-      },
-    ],
-    securityCourses: [
-      {
-        name: 'Security Course 1',
-      },
-    ],
+    website: 'https://newpage.mypage.com',
+    ownOffice: true,
+    ownVehicle: 43,
+    address: '123 Main St',
+    state: 'CDMX',
+    city: 'CDMX',
+    specializedTools: "Herramienta",
+    yearsExperience: 5,
+    certifications: "Certificación",
+    securityCourses: "Curso de seguridad",    
   },
 };
 
-let token = '';
+let id = ""
 
 describe('POST installer', () => {
   it("should return 400 if the user  don't send nothing", async () => {
@@ -178,8 +129,6 @@ describe('POST installer', () => {
       .post(`${PATH}/installer`)
       .send(installerPayload);
 
-    token = body.data.token;
-
     expect(statusCode).toBe(200);
   });
 
@@ -194,39 +143,25 @@ describe('POST installer', () => {
   it('should return 400 if rfc already exist', async () => {
     const { statusCode } = await supertest(server.app)
       .post(`${PATH}/installer`)
-      .send(installerPayloadRfcSame);
+      .send(installerPayloadRFCSame);
 
     expect(statusCode).toBe(400);
   });
 });
 
-describe('GET /installer', () => {
-  it('should return  401 when the toke is not valid', async () => {
-    await supertest(server.app).get(`${PATH}/installer`).expect(401);
-  });
+// describe('PUT /installer', () => {
+//   it('should return  401 when the toke is not valid', async () => {
+//     await supertest(server.app).put(`${PATH}/installer`).expect(401);
+//   });
 
-  it('should return 200 OK request get installer', async () => {
-    const { statusCode } = await supertest(server.app)
-      .get(`${PATH}/installer`)
-      .set({ Authorization: `Bearer ${token}` });
+//   it.skip("should return 400 if the user don't send password", async () => {
+//     const { statusCode } = await supertest(server.app)
+//       .put(`${PATH}/installer`)
+//       .set({ Authorization: `Bearer ${token}` })
+//       .send({ name: 23423423423 });
 
-    expect(statusCode).toBe(200);
-  });
-});
-
-describe('PUT /installer', () => {
-  it('should return  401 when the toke is not valid', async () => {
-    await supertest(server.app).put(`${PATH}/installer`).expect(401);
-  });
-
-  it.skip("should return 400 if the user don't send password", async () => {
-    const { statusCode } = await supertest(server.app)
-      .put(`${PATH}/installer`)
-      .set({ Authorization: `Bearer ${token}` })
-      .send({ name: 23423423423 });
-
-    expect(statusCode).toBe(400);
-  });
+//     expect(statusCode).toBe(400);
+//   });
 
   // it('should return 400 if the user send wrong data type', async () => {
   //   const { statusCode } = await supertest(server.app)
@@ -272,17 +207,40 @@ describe('PUT /installer', () => {
 
   //   expect(statusCode).toBe(200);
   // });
+
+describe('GET /installers', () => {
+  it('should return 200 OK request get installers pending', async () => {
+    const { statusCode,body } = await supertest(server.app)
+      .get(`${PATH}/installer?pending=true`)
+
+    id = body[0]._id
+
+    expect(statusCode).toBe(200);
+  })
+})
+
+describe('GET /installer', () => {
+  it('should return  400 when the id is not valid in URL', async () => {
+    await supertest(server.app).get(`${PATH}/installer/asd2342dsfs`).expect(400);
+  });
+
+  it('should return 200 OK request get installer', async () => {
+    const { statusCode } = await supertest(server.app)
+      .get(`${PATH}/installer/${id}`)
+
+    expect(statusCode).toBe(200);
+  });
 });
 
+
 describe('DELETE /installer', () => {
-  it('should return  401 when the toke is not valid', async () => {
-    await supertest(server.app).delete(`${PATH}/installer`).expect(401);
+  it('should return  400 when the id is not valid in URL', async () => {
+    await supertest(server.app).delete(`${PATH}/installer/asd2342dsfs`).expect(400);
   });
 
   it('should return 200 OK request delete installer', async () => {
     const { statusCode } = await supertest(server.app)
-      .delete(`${PATH}/installer`)
-      .set({ Authorization: `Bearer ${token}` });
+      .delete(`${PATH}/installer/${id}`)
 
     expect(statusCode).toBe(200);
   });

@@ -2,33 +2,35 @@ import { Router } from 'express';
 
 import { default as validationMiddleware } from '../middleware/validation.middleware';
 import authMiddleware from '../user/user.middleware';
-import { validationUserCreate } from '../user/user.validator';
+import { validationUserInstallerCreate } from '../user/user.validator';
 import {
   deleteInstaller,
-  getInstaller,
+  getInstallerById,
   getInstallers,
   postInstaller,
-  putInstaller,
+  //putInstaller,
 } from './installer.controller';
 import { validationInstallerCreate } from './installer.validator';
+import validateIdMiddleware from '../middleware/validateId.middleware';
 
 const router = Router();
 
 // Installer
 router.post(
   '/',
-  validationUserCreate, //Validation user validation
+  validationUserInstallerCreate, //Validation user validation
   validationInstallerCreate,
   validationMiddleware,
   postInstaller
 );
 
-router.get('/', authMiddleware, getInstaller);
+router.get('/:id',
+  getInstallerById);
 
-router.get('/all', authMiddleware, getInstallers);
+router.get('/', getInstallers);
 
-router.put('/', authMiddleware, putInstaller);
+//router.put('/', authMiddleware, putInstaller);
 
-router.delete('/', authMiddleware, deleteInstaller);
+router.delete('/:id', validateIdMiddleware, deleteInstaller);
 
 export default router;

@@ -8,9 +8,11 @@ import {
   createInstaller,
   destroyInstaller,
   getAllInstallers,
-  getOneInstaller,
-  updateInstaller,
+  getOneInstallerById,
+  // updateInstaller,
 } from './installer.service';
+
+import qs from 'qs';
 
 export const postInstaller = async (req: Request, res: Response) => {
   try {
@@ -29,9 +31,12 @@ export const postInstaller = async (req: Request, res: Response) => {
   }
 };
 
-export const getInstaller = async (req: Request, res: Response) => {
+export const getInstallerById = async (req: Request, res: Response) => {
   try {
-    const response = await getOneInstaller(req);
+
+    const {id} = req.params;
+
+    const response = await getOneInstallerById(id);
 
     return okRequest(res, response);
   } catch (error) {
@@ -44,7 +49,11 @@ export const getInstaller = async (req: Request, res: Response) => {
 
 export const getInstallers = async (req: Request, res: Response) => {
   try {
-    const response = await getAllInstallers();
+
+    const {pending} = req.query;
+    const status = pending ? 'pending' : 'approved';
+    
+    const response = await getAllInstallers(status);
     return okRequest(res, response);
   } catch (error) {
     if (error instanceof Error) {
@@ -54,24 +63,26 @@ export const getInstallers = async (req: Request, res: Response) => {
   }
 };
 
-export const putInstaller = async (req: Request, res: Response) => {
-  try {
-    // if (validateRouteBody(req, res)) return;
+// export const putInstaller = async (req: Request, res: Response) => {
+//   try {
+//     // if (validateRouteBody(req, res)) return;
 
-    const response = await updateInstaller(req);
+//     const response = await updateInstaller(req);
 
-    return okRequest(res, response);
-  } catch (error) {
-    if (error instanceof Error) {
-      return badRequest(res, error.message);
-    }
-    return internalServerError(res);
-  }
-};
+//     return okRequest(res, response);
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       return badRequest(res, error.message);
+//     }
+//     return internalServerError(res);
+//   }
+// };
 
 export const deleteInstaller = async (req: Request, res: Response) => {
   try {
-    const response = await destroyInstaller(req);
+
+    const {id} = req.params;
+    const response = await destroyInstaller(id);
     return okRequest(res, response);
   } catch (error) {
     if (error instanceof Error) {

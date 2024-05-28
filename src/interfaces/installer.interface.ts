@@ -1,31 +1,18 @@
-export interface SocialMedia {
-  _id?: string;
-  name: string;
-  url: string;
-}
-
-export interface Certification {
-  _id?: string;
-  name: string;
-}
-
-export interface SecurityCourse {
-  _id?: string;
-  name: string;
-}
-
 export interface InstallerProps {
+  companyName: string;
   address: string;
-  country: string;
   city: string;
   state: string;
-  rfc: string;
   phoneNumber: string;
+  IMMSNumber: number;
   website: string;
   employeesNumber: number;
+  ownOffice: boolean;
+  ownVehicle: boolean;
   yearsOfExperience: number;
-  physicalPerson: boolean;
-  socialMedia: SocialMedia[];
-  certifications: Certification[];
-  securityCourses: SecurityCourse[];
+  socialMedia: string;
+  specializedTools: string;
+  yearsExperience: number;
+  certifications: string;
+  securityCourses: string;
 }
