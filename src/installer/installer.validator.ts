@@ -1,102 +1,32 @@
 import { check } from 'express-validator';
 
 export const validationInstallerCreate = [
-  check('installer.address', 'The address is required in installers')
-    .not()
-    .isEmpty(),
-
-  check('installer.country', 'The country is required in installers')
-    .not()
-    .isEmpty(),
-
-  check('installer.city', 'The city is required in installers').not().isEmpty(),
-
+  check('installer.companyName', 'The companyName is required in installers')
+    .not().isEmpty(),
+  check('installer.phoneNumber', 'The phoneNumber is required and should have 10 digits or more in installers')
+    .not().isEmpty().isLength({min: 10}),
+  check('installer.IMSSNumber', 'The IMSSNumber is required and should be number with 11 digits in installers')
+    .not().isEmpty().isNumeric().isLength({ min: 10, max: 12 }),
+  check('installer.employeesNumber', 'The employeesNumber is number in installers')
+    .not().isEmpty().isNumeric(),
+  check('installer.webSite', 'The webSite is required in installers')
+    .not().isEmpty(),
+  check('installer.ownOffice', 'The ownOffice is required and should be a boolean in installers')
+    .not().isEmpty().isBoolean(),
+  check('installer.ownVehicle','The ownVehicle is required and should be a boolean in installers')
+    .not().isEmpty().isBoolean(),
   check('installer.state', 'The state is required in installers')
-    .not()
-    .isEmpty(),
-
-  check('installer.state', 'The state is required in installers')
-    .not()
-    .isEmpty(),
-
-  check('installer.rfc', 'The RFC is required in installers').not().isEmpty(),
-
-  check(
-    'installer.rfc',
-    'The rfc should have 12 character min and 13 max'
-  ).isLength({ min: 12, max: 13 }),
-
-  check('installer.phoneNumber', 'The phone number is required in installers')
-    .not()
-    .isEmpty(),
-
-  check('installer.website', 'The website is required in installers')
-    .not()
-    .isEmpty(),
-
-  check(
-    'installer.employeesNumber',
-    'The employees number is required in installers'
-  )
-    .not()
-    .isEmpty(),
-
-  check(
-    'installer.yearsOfExperience',
-    'The years of experience is required in installers and should be a number'
-  )
-    .not()
-    .isEmpty()
-    .isNumeric(),
-
-  check(
-    'installer.physicalPerson',
-    'The physical person is required in installers and should be a boolean'
-  )
-    .not()
-    .isEmpty()
-    .isBoolean(),
-
-  check(
-    'installer.socialMedia',
-    'The employees number is required in installers'
-  )
-    .isArray({ min: 1 })
-    .withMessage('The social media is required in installers'),
-
-  check('installer.socialMedia.*.name', 'The name is required in social media')
-    .not()
-    .isEmpty(),
-
-  check('installer.socialMedia.*.url', 'The url is required in social media')
-    .not()
-    .isEmpty(),
-
-  check(
-    'installer.certifications',
-    'The certifications is required in installers'
-  )
-    .isArray({ min: 1 })
-    .withMessage('The certifications is required in installers'),
-
-  check(
-    'installer.certifications.*.name',
-    'The name is required in certifications'
-  )
-    .not()
-    .isEmpty(),
-
-  check(
-    'installer.securityCourses',
-    'The security courses is required in installers'
-  )
-    .isArray({ min: 1 })
-    .withMessage('The security courses is required in installers'),
-
-  check(
-    'installer.securityCourses.*.name',
-    'The name is required in security courses'
-  )
-    .not()
-    .isEmpty(),
+    .not().isEmpty(),
+  check('installer.city', 'The city is required in installers')
+    .not().isEmpty(),
+  check('installer.address', 'The employees number is required in installers')
+    .not().isEmpty(),
+  check('installer.specializedTools', 'The specializedTools is required in installers')
+    .not().isEmpty(),
+  check('installer.yearsExperience', 'The yearsExperience is required and should be a number in installers')
+    .not().isEmpty().isNumeric(),
+  check('installer.certifications', 'The certifications is required in installers')
+    .not().isEmpty(),
+  check('installer.securityCourses', 'The securityCourses is required in installers')
+    .not().isEmpty(),
 ];

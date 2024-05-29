@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pedding', 'approved', 'denied'],
+    enum: ['pending', 'approved', 'denied'],
   },
   role_id: {
     type: Schema.Types.ObjectId,
