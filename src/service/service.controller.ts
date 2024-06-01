@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import { Types } from "mongoose";
 
-import Service  from './service.model';
 import { createServiceService, deleteServiceService, getAllServicesService, getOneServiceService, getRootServicesService, updateServiceService } from "./service.service";
 
-import { badRequest, handleErrorResponse, internalServerError, notFound, okRequest } from '../helper/handleResponse';
+import { badRequest, handleErrorResponse, internalServerError, okRequest } from '../helper/handleResponse';
 import validateRouteBody from '../helper/validateRoute';
 import parseMongoId from "../helper/parseMongoId";
 import messages from "../helper/messages";
