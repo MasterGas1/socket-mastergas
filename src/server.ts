@@ -12,6 +12,7 @@ import addressRoutes from './address/address.route'
 import seederRoutes from './seeder/seeder.route';
 import installerRoutes from './installer/installer.route';
 import roleRoutes from './roles/roles.route';
+import orderRoutes from './order/order.route';
 import validationRoutes from './validation/validation.route'
 
 class Server {
@@ -28,6 +29,7 @@ class Server {
         customer: '/customer',
         installer: '/installer',
         role: '/role',
+        order: '/order',
         validation: '/validation'
     }
 
@@ -63,6 +65,7 @@ class Server {
         this.app.use(`${this.PATH}${this.apiPaths.seeder}`, seederRoutes) //Seeder
         this.app.use(`${this.PATH}${this.apiPaths.installer}`, installerRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.role}`, roleRoutes)
+        this.app.use(`${this.PATH}${this.apiPaths.order}`, orderRoutes)
         this.app.use(`${this.PATH}${this.apiPaths.validation}`, validationRoutes)
     }
 

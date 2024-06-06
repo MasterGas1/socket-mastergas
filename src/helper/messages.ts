@@ -9,5 +9,8 @@ export default {
         subServiceRepeated: '400-El subservicio ya existe: ',
         serviceNotFound: '404-El servicio no encontrado',
         serviceDelete: 'El servicio ha sido eliminado',
+    },
+    messageOrder: {
+        orderNotFound: '404-El pedido no existe',
     }
 }
