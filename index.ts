@@ -1,15 +1,19 @@
-import dotenv from 'dotenv';
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
 
-import db from './db/connection';
-import Server from './src/server';
+import socketConfig from './src/config/socket';
 
-dotenv.config();
+const VERSION = '/v1';
 
-//Lift server
-const server = new Server();
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 
-//Show the server PORT
-server.listen();
+app.use(express.json());
 
-// Connect to database
-// db()
+socketConfig(io);
+
+
+const PORT = process.env.PORT || 4001;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`))

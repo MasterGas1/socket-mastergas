@@ -1,82 +1,27 @@
-import { Request, Response } from 'express';
-import {
-  badRequest,
-  internalServerError,
-  okRequest,
-} from '../helper/handleResponse';
-import {
-  createInstaller,
-  destroyInstaller,
-  getAllInstallers,
-  getOneInstaller,
-  updateInstaller,
-} from './installer.service';
+import { Server, Socket } from "socket.io";
 
-export const postInstaller = async (req: Request, res: Response) => {
-  try {
-    const response = await createInstaller(req.body);
+import { IUpdateInstallerCoordinates } from "./installer.interface";
 
-    if (!response) {
-      return badRequest(res, 'The token is already exist');
-    }
+import axiosDb from "../config/axios";
 
-    return okRequest(res, { token: response });
-  } catch (error) {
-    if (error instanceof Error) {
-      return badRequest(res, error.message);
-    }
-    return internalServerError(res);
-  }
-};
+export default (socket: Socket, io: Server) => {
+    socket.on("updateInstallerCoordinates", async (data: IUpdateInstallerCoordinates) => {
 
-export const getInstaller = async (req: Request, res: Response) => {
-  try {
-    const response = await getOneInstaller(req);
+        const {token, longitude, latitude} = data;
 
-    return okRequest(res, response);
-  } catch (error) {
-    if (error instanceof Error) {
-      return badRequest(res, error.message);
-    }
-    return internalServerError(res);
-  }
-};
-
-export const getInstallers = async (req: Request, res: Response) => {
-  try {
-    const response = await getAllInstallers();
-    return okRequest(res, response);
-  } catch (error) {
-    if (error instanceof Error) {
-      return badRequest(res, error.message);
-    }
-    return internalServerError(res);
-  }
-};
-
-export const putInstaller = async (req: Request, res: Response) => {
-  try {
-    // if (validateRouteBody(req, res)) return;
-
-    const response = await updateInstaller(req);
-
-    return okRequest(res, response);
-  } catch (error) {
-    if (error instanceof Error) {
-      return badRequest(res, error.message);
-    }
-    return internalServerError(res);
-  }
-};
-
-export const deleteInstaller = async (req: Request, res: Response) => {
-  try {
-    const response = await destroyInstaller(req);
-    return okRequest(res, response);
-  } catch (error) {
-    if (error instanceof Error) {
-      return badRequest(res, error.message);
-    }
-    return internalServerError(res);
-  }
-};
+        try {
+            await axiosDb.put('/installer/coordinates', {
+                    latitude,
+                    longitude,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    })
+}
